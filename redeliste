@@ -1,0 +1,54 @@
+#!/usr/bin/env perl
+use Mojolicious::Lite -signatures;
+
+# In-memory "database"
+helper data => sub { state $data = {session => {}} };
+
+# Token generator helper
+helper generate_token => sub ($self) {
+
+    # Generate token with 6 characters
+    my @chars = ('A'..'Z', 1 .. 9);
+    my $token = join '' => map $chars[rand @chars] => 1 .. 6;
+
+    # Done, if doesn't exist
+    return $token unless exists $self->data->{$token};
+    return $self->generate_token;
+};
+
+# First steps: static pages only
+get '/'                 => 'choose_role';
+get '/start_session'    => 'start_session';
+get '/join_session'     => 'join_session';
+
+# Create a session and generate a token for session members
+post '/start_session' => sub ($c) {
+    $c->render(text => $c->generate_token);
+};
+
+app->start;
+__DATA__
+
+@@ choose_role.html.ep
+% layout 'default';
+% title 'Redeliste';
+<p>
+    %= link_to 'Start a new session'        => 'start_session'
+    %= link_to 'Join an existing session'   => 'join_session'
+</p>
+
+@@ start_session.html.ep
+% layout 'default';
+% title 'Start a new session';
+%= form_for start_session => (method => 'post') => begin
+    <p>
+        %= label_for 'name' => 'Name:'
+        %= text_field name => '', id => 'name'
+    </p>
+    <p><%= submit_button 'Start session' %></p>
+% end
+
+@@ layouts/default.html.ep
+<!DOCTYPE html><html><head><title><%= title %></title></head><body>
+%= content
+</body></html>
