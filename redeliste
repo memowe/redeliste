@@ -2,7 +2,7 @@
 use Mojolicious::Lite -signatures;
 
 # In-memory "database"
-helper data => sub { state $data = {session => {}} };
+helper data => sub { state $data = {} };
 
 # Token generator helper
 helper generate_token => sub ($self) {
