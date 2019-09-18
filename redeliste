@@ -23,7 +23,19 @@ get '/join_session';
 
 # Create a session and generate a token for session members
 post '/start_session' => sub ($c) {
-    $c->render(text => $c->generate_token);
+
+    # Initiate
+    my $token = $c->generate_token;
+    $c->data->{$token} = {
+        name        => $c->param('name') // 'Anonymous session',
+        persons     => [],
+        speaker_ids => [],
+        token       => $token,
+    };
+
+    # Store and work with it
+    $c->session(token => $token);
+    $c->redirect_to('chair');
 };
 
 app->start;
