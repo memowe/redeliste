@@ -17,9 +17,9 @@ helper generate_token => sub ($self) {
 };
 
 # First steps: static pages only
-get '/'                 => 'choose_role';
-get '/start_session'    => 'start_session';
-get '/join_session'     => 'join_session';
+get '/' => 'choose_role';
+get '/start_session';
+get '/join_session';
 
 # Create a session and generate a token for session members
 post '/start_session' => sub ($c) {
