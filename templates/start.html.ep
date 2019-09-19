@@ -1,6 +1,6 @@
 % layout 'default';
 % title 'Start a new session';
-%= form_for start_session => (method => 'post') => begin
+%= form_for start => (method => 'post') => begin
     <table><tbody>
         <tr>
             <th><%= label_for 'name' => 'Name:' %></th>

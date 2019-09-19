@@ -16,13 +16,13 @@ helper generate_token => sub ($self) {
     return $self->generate_token;
 };
 
-# First steps: static pages only
-get '/' => 'choose_role';
-get '/start_session';
-get '/join_session';
+# First steps: static forms only
+get '/' => 'choose';
+get '/start';
+get '/join';
 
 # Create a session and generate a token for session members
-post '/start_session' => sub ($c) {
+post '/start' => sub ($c) {
 
     # Prepare data
     my $name    = $c->param('name')  //  'Anonymous session';
@@ -44,7 +44,7 @@ post '/start_session' => sub ($c) {
 };
 
 # Join a session
-post '/join_session' => sub ($c) {
+post '/join' => sub ($c) {
 
     # Prepare data
     my $name = $c->param('name') // ('Anonymous' . int(rand 10_000));

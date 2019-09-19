@@ -1,0 +1,6 @@
+% layout 'default';
+% title 'Redeliste';
+<p>
+    %= link_to 'Start a new session'        => 'start'
+    %= link_to 'Join an existing session'   => 'join'
+</p>
