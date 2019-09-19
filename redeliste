@@ -43,6 +43,27 @@ post '/start_session' => sub ($c) {
     $c->redirect_to('dump'); # TODO
 };
 
+# Join a session
+post '/join_session' => sub ($c) {
+
+    # Prepare data
+    my $name = $c->param('name') // ('Anonymous' . int(rand 10_000));
+    my $star = $c->param('sex') eq 'male' ? '' : 1;
+
+    # Lookup session
+    my $token   = $c->param('token');
+    my $session = $c->data->{$token};
+    return $c->reply->not_found unless defined $session;
+
+    # Inject data
+    my $persons = $session->{persons};
+    my $plen    = scalar @$persons;
+    my $person  = {id => $plen, name => $name, spoken => '', star => $star};
+    push @$persons, $person;
+
+    # Store and work with it
+    $c->session({token => $token, user_id => $person->{id}, role => 'user'});
+    $c->redirect_to('dump'); # TODO
 };
 
 # TODO debug only
