@@ -16,8 +16,7 @@ Eine Echtzeit-Multiuser-Redeliste.
 
 ## Run
 
-    $ morbo redeliste
-
+    $ hypnotoad redeliste
 
 ## Author and License
 
