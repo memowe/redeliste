@@ -46,6 +46,7 @@ post '/start' => sub ($c) {
 # Host a session
 get '/host' => sub ($c) {
     $c->reply->not_found unless defined $c->data->{$c->session('token')};
+    $c->reply->not_found unless $c->session('role') eq 'chair';
 };
 
 # Join a session
