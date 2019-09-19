@@ -77,6 +77,20 @@ get '/attend' => sub ($c) {
     $c->reply->not_found unless defined $c->data->{$c->session('token')};
 };
 
+# Read all session data
+get '/data' => [format => 'json'] => sub ($c) {
+
+    # Lookup session
+    my $session = $c->data->{$c->session('token')};
+    return $c->reply->not_found unless defined $session;
+
+    # Send as JSON
+    $c->render(json => {
+        session => $session,
+        userId  => $c->session('user_id'),
+    });
+};
+
 # Reset local storage
 get '/reset' => sub ($c) {
     delete $c->session->{$_} for qw(token user_id role);
