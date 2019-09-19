@@ -24,17 +24,22 @@ get '/join_session';
 # Create a session and generate a token for session members
 post '/start_session' => sub ($c) {
 
+    # Prepare data
+    my $name    = $c->param('name')  //  'Anonymous session';
+    my $uname   = $c->param('uname') // ('Anonymous' . int(rand 10_000));
+    my $star    = $c->param('sex') eq 'male' ? '' : 1;
+
     # Initiate
     my $token = $c->generate_token;
     $c->data->{$token} = {
-        name        => $c->param('name') // 'Anonymous session',
-        persons     => [],
+        name        => $name,
+        persons     => [{id => 0, name => $uname, spoken => '', star => $star}],
         speaker_ids => [],
         token       => $token,
     };
 
     # Store and work with it
-    $c->session(token => $token);
+    $c->session({token => $token, user_id => 0, role => 'chair'});
     $c->redirect_to('chair');
 };
 
@@ -66,11 +71,25 @@ __DATA__
 % layout 'default';
 % title 'Start a new session';
 %= form_for start_session => (method => 'post') => begin
-    <p>
-        %= label_for 'name' => 'Name:'
-        %= text_field name => '', id => 'name'
-    </p>
-    <p><%= submit_button 'Start session' %></p>
+    <table><tbody>
+        <tr>
+            <th><%= label_for 'name' => 'Name:' %></th>
+            <td><%= text_field name => '', id => 'name' %></td>
+        </tr>
+        <tr>
+            <th><%= label_for 'uname' => 'Dein Name:' %></th>
+            <td><%= text_field uname => '', id => 'uname' %></td>
+        </tr>
+        <tr>
+            <th><%= label_for 'sex' => 'Dein Geschlecht:' %></th>
+            <td><%= select_field sex => [
+                [Männlich  => 'male'],
+                [Weiblich  => 'female'],
+                [Sternchen => 'star'],
+            ], id => 'sex' %></td>
+        </tr>
+        <tr><td colspan="2"><%= submit_button 'Start session' %></td></tr>
+    </tbody></table>
 % end
 
 @@ join_session.html.ep
