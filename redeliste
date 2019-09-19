@@ -40,7 +40,7 @@ post '/start_session' => sub ($c) {
 
     # Store and work with it
     $c->session({token => $token, user_id => 0, role => 'chair'});
-    $c->redirect_to('chair');
+    $c->redirect_to('dump'); # TODO
 };
 
 # TODO debug only
@@ -53,7 +53,7 @@ get '/session_list' => sub ($c) {
 
 # TODO debug only
 get '/dump' => sub ($c) {
-    $c->render(format => 'txt', text => $c->dumper($c->data));
+    $c->render(format => 'txt', text => $c->dumper([$c->data, $c->session]));
 };
 
 app->start;
