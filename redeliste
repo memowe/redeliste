@@ -43,12 +43,6 @@ post '/start_session' => sub ($c) {
     $c->redirect_to('dump'); # TODO
 };
 
-# TODO debug only
-get '/session_list' => sub ($c) {
-    my @sessions = sort {$a->{name} cmp $b->{name}} values %{$c->data};
-    $c->render(format => 'txt', text =>
-        join "\n" => map "$_->{name}: $_->{token}\n" => @sessions
-    );
 };
 
 # TODO debug only
