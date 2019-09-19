@@ -76,6 +76,12 @@ get '/attend' => sub ($c) {
     $c->reply->not_found unless defined $c->data->{$c->session('token')};
 };
 
+# Reset local storage
+get '/reset' => sub ($c) {
+    delete $c->session->{$_} for qw(token user_id role);
+    $c->render(text => 'OK');
+};
+
 # TODO debug only
 get '/dump' => sub ($c) {
     $c->render(format => 'txt', text => $c->dumper([$c->data, $c->session]));
