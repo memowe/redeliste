@@ -40,7 +40,12 @@ post '/start' => sub ($c) {
 
     # Store and work with it
     $c->session({token => $token, user_id => 0, role => 'chair'});
-    $c->redirect_to('dump'); # TODO
+    $c->redirect_to('host');
+};
+
+# Host a session
+get '/host' => sub ($c) {
+    $c->reply->not_found unless defined $c->data->{$c->session('token')};
 };
 
 # Join a session
@@ -63,7 +68,12 @@ post '/join' => sub ($c) {
 
     # Store and work with it
     $c->session({token => $token, user_id => $person->{id}, role => 'user'});
-    $c->redirect_to('dump'); # TODO
+    $c->redirect_to('attend');
+};
+
+# Attend a session
+get '/attend' => sub ($c) {
+    $c->reply->not_found unless defined $c->data->{$c->session('token')};
 };
 
 # TODO debug only
