@@ -73,6 +73,31 @@ __DATA__
     <p><%= submit_button 'Start session' %></p>
 % end
 
+@@ join_session.html.ep
+% layout 'default';
+% title 'Join a session';
+%= form_for join_session => (method => 'post') => begin
+    <table><tbody>
+        <tr>
+            <th><%= label_for 'token' => 'Code:' %></th>
+            <td><%= text_field token => '', id => 'token' %></td>
+        </tr>
+        <tr>
+            <th><%= label_for 'name' => 'Name:' %></th>
+            <td><%= text_field name => '', id => 'name' %></td>
+        </tr>
+        <tr>
+            <th><%= label_for 'sex' => 'Geschlecht:' %></th>
+            <td><%= select_field sex => [
+                [Männlich  => 'male'],
+                [Weiblich  => 'female'],
+                [Sternchen => 'star'],
+            ], id => 'sex' %></td>
+        </tr>
+        <tr><td colspan="2"><%= submit_button 'Join session' %></td></tr>
+    </tbody></table>
+% end
+
 @@ layouts/default.html.ep
 <!DOCTYPE html><html><head><title><%= title %></title></head><body>
 %= content
