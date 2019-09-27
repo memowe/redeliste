@@ -2,7 +2,28 @@
 use Mojolicious::Lite -signatures;
 
 # In-memory "database"
-helper data => sub { state $data = {} };
+# TODO remove test data
+helper data => sub { state $data = {
+    "FOOBAR" => {
+      "name" => "Sitzung",
+      "persons" => [
+        {
+          "id" => 0,
+          "name" => "Mirko",
+          "spoken" => "",
+          "star" => ""
+        },
+        {
+          "id" => 1,
+          "name" => "Yasemin",
+          "spoken" => "",
+          "star" => 1
+        }
+      ],
+      "speaker_ids" => [],
+      "token" => "FOOBAR"
+    }
+} };
 
 # Token generator helper
 helper generate_token => sub ($self) {
