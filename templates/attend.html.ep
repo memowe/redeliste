@@ -9,6 +9,9 @@
             </li>
         </ul>
     </div>
+    <button v-on:click="disconnect" v-if="wsConnected">Disconnect</button>
+    <button v-on:click="connect" v-if="! wsConnected">Connect</button>
+    <button v-on:click="sync" v-if="wsConnected">Sync!</button>
 </section>
 %= javascript 'https://cdn.jsdelivr.net/npm/vue/dist/vue.js'
 %= javascript 'https://cdn.jsdelivr.net/npm/axios/dist/axios.js'

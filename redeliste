@@ -109,6 +109,15 @@ get '/data' => [format => 'json'] => sub ($c) {
     $c->render(json => {
         session => $session,
         userId  => $c->session('user_id'),
+        wsURL   => $c->url_for('sync')->to_abs,
+    });
+};
+
+# Push synchronization
+websocket '/sync' => sub ($c) {
+    $c->on(message => sub ($c, $data) {
+        $c->app->log->debug($c->dumper($data));
+        #$c->send({json => {reply => $c->dumper($data)}});
     });
 };
 
