@@ -1,2 +1,15 @@
 % layout 'default';
 % title 'Redeliste';
+<section id="attend">
+    <div v-if="session">
+        <h1>{{ session.name }}</h1>
+        <ul id="persons">
+            <li v-for="p in session.persons">
+                {{ p.name }}
+            </li>
+        </ul>
+    </div>
+</section>
+%= javascript 'https://cdn.jsdelivr.net/npm/vue/dist/vue.js'
+%= javascript 'https://cdn.jsdelivr.net/npm/axios/dist/axios.js'
+%= javascript '/js/attend.js'
