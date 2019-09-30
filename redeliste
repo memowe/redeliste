@@ -115,6 +115,11 @@ get '/data' => [format => 'json'] => sub ($c) {
 
 # Push synchronization
 websocket '/sync' => sub ($c) {
+
+    # Keep connection alive for at least one day
+    $c->inactivity_timeout(24*60*60);
+
+    # React on a message
     $c->on(message => sub ($c, $data) {
         $c->app->log->debug($c->dumper($data));
         #$c->send({json => {reply => $c->dumper($data)}});
