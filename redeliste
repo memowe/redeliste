@@ -54,7 +54,12 @@ post '/start' => sub ($c) {
     my $token = $c->generate_token;
     $c->data->{$token} = {
         name        => $name,
-        persons     => [{id => 0, name => $uname, spoken => '', star => $star}],
+        persons     => [{
+            id      => 0,
+            name    => $uname,
+            spoken  => '',
+            star    => $star,
+        }],
         speaker_ids => [],
         token       => $token,
     };
