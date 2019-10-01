@@ -25,6 +25,21 @@ helper data => sub { state $data = {
     }
 } };
 
+# Prepare full state dump for clients
+helper state_dump => sub ($c) {
+
+    # Lookup session
+    my $session = $c->data->{$c->session('token')};
+    return $c->reply->not_found unless defined $session;
+
+    # Prepare data structure
+    return {
+        session => $session,
+        userId  => $c->session('user_id'),
+        wsURL   => $c->url_for('sync')->to_abs->to_string,
+    };
+};
+
 # Token generator helper
 helper generate_token => sub ($self) {
 
@@ -103,19 +118,14 @@ get '/attend' => sub ($c) {
     $c->reply->not_found unless defined $c->data->{$c->session('token')};
 };
 
-# Read all session data
+# Read state data dump as JSON
 get '/data' => [format => 'json'] => sub ($c) {
+    $c->render(json => $c->state_dump);
+};
 
-    # Lookup session
-    my $session = $c->data->{$c->session('token')};
-    return $c->reply->not_found unless defined $session;
-
-    # Send as JSON
-    $c->render(json => {
-        session => $session,
-        userId  => $c->session('user_id'),
-        wsURL   => $c->url_for('sync')->to_abs,
-    });
+# Read state data dump as text
+get '/data' => [format => 'txt'] => sub ($c) {
+	$c->render(text => $c->dumper($c->state_dump));
 };
 
 # Push synchronization
@@ -135,11 +145,6 @@ websocket '/sync' => sub ($c) {
 get '/reset' => sub ($c) {
     delete $c->session->{$_} for qw(token user_id role);
     $c->render(text => 'OK');
-};
-
-# TODO debug only
-get '/dump' => sub ($c) {
-    $c->render(format => 'txt', text => $c->dumper([$c->data, $c->session]));
 };
 
 app->start;
