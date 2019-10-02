@@ -12,17 +12,17 @@ new Vue({
             this.socket = new WebSocket(this.wsURL);
             this.socket.onopen = () => {
                 this.wsConnected = true;
-                console.log('Connected...');
-                this.socket.onmessage = e => console.log(e);
+            };
+            this.socket.onmessage = msg => {
+                this.session = JSON.parse(msg.data).session;
             };
         },
         disconnect() {
             this.socket.close();
             this.wsConnected = false;
-            console.log('Disconnected');
         },
-        sync() {
-            this.socket.send('foo');
+        requestSpeak() {
+            this.socket.send('RQSP');
         }
     },
     mounted() {
@@ -30,6 +30,7 @@ new Vue({
             this.session = res.data.session;
             this.userId  = res.data.userId;
             this.wsURL   = res.data.wsURL;
+            this.connect();
         });
     }
 })

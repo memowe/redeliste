@@ -27,6 +27,9 @@ helper data => sub { state $data = {
     }
 } };
 
+# Client connections (SESSION_TOKEN => [PERSON_ID => TX])
+helper clients => sub { state $clients = {} };
+
 # Prepare full state dump for clients
 helper state_dump => sub ($c) {
 
@@ -52,6 +55,18 @@ helper generate_token => sub ($self) {
     # Done, if doesn't exist
     return $token unless exists $self->data->{$token};
     return $self->generate_token;
+};
+
+# Add someone to a speaker list
+helper request_to_speak => sub ($self, $token, $id) {
+    $self->app->log->debug("Request to speak: $token - $id");
+    # TODO
+};
+
+# Send state to all clients for the given session
+helper broadcast => sub ($self, $token) {
+    $_->send({json => $self->state_dump})
+        for grep {defined} @{$self->clients->{$token}};
 };
 
 # First steps: static forms only
@@ -143,10 +158,27 @@ websocket '/sync' => sub ($c) {
     # Keep connection alive for at least one day
     $c->inactivity_timeout(24*60*60);
 
-    # React on a message
-    $c->on(message => sub ($c, $data) {
-        $c->app->log->debug($c->dumper($data));
-        #$c->send({json => {reply => $c->dumper($data)}});
+    # Lookup corresponding data
+    my $session = $c->data->{$c->session('token')};
+    return $c->reply->not_found unless $session;
+    my $person = $session->{persons}[$c->session('user_id')];
+    return $c->reply->not_found unless $person;
+
+    # Store connection (data structure is auto-vivified)
+    $c->clients->{$session->{token}}[$person->{id}] = $c->tx;
+    $person->{active} = 1;
+
+    # React on a request to speak (message is irrelevant)
+    $c->on(message => sub {
+        $c->request_to_speak($session->{token}, $person->{id});
+        $c->broadcast($session->{token});
+    });
+
+    # React on a client leaving
+    $c->on(finish => sub {
+        $c->clients->{$session->{token}}[$person->{id}] = undef;
+        $person->{active} = 0;
+        $c->broadcast($session->{token});
     });
 };
 
