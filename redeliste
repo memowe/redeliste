@@ -10,12 +10,14 @@ helper data => sub { state $data = {
         {
           "id" => 0,
           "name" => "Mirko",
+          "active" => 0,
           "spoken" => "",
           "star" => ""
         },
         {
           "id" => 1,
           "name" => "Yasemin",
+          "active" => 0,
           "spoken" => "",
           "star" => 1
         }
@@ -72,6 +74,7 @@ post '/start' => sub ($c) {
         persons     => [{
             id      => 0,
             name    => $uname,
+            active  => 0,
             spoken  => '',
             star    => $star,
         }],
@@ -105,7 +108,13 @@ post '/join' => sub ($c) {
     # Inject data
     my $persons = $session->{persons};
     my $plen    = scalar @$persons;
-    my $person  = {id => $plen, name => $name, spoken => '', star => $star};
+    my $person  = {
+        id      => $plen,
+        name    => $name,
+        active  => 0,
+        spoken  => '',
+        star    => $star,
+    };
     push @$persons, $person;
 
     # Store and work with it
