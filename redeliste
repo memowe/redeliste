@@ -1,31 +1,12 @@
 #!/usr/bin/env perl
 use Mojolicious::Lite -signatures;
 
+# Load configuration from redeliste.conf
+plugin 'Config';
+app->secrets([app->config('secret')]);
+
 # In-memory "database"
-# TODO remove test data
-helper data => sub { state $data = {
-    "FOOBAR" => {
-      "name" => "Sitzung",
-      "persons" => [
-        {
-          "id" => 0,
-          "name" => "Mirko",
-          "active" => 0,
-          "spoken" => "",
-          "star" => ""
-        },
-        {
-          "id" => 1,
-          "name" => "Yasemin",
-          "active" => 0,
-          "spoken" => "",
-          "star" => 1
-        }
-      ],
-      "speaker_ids" => [],
-      "token" => "FOOBAR"
-    }
-} };
+helper data => sub { state $data = app->config('init_sessions') // {} };
 
 # Client connections (SESSION_TOKEN => [PERSON_ID => TX])
 helper clients => sub { state $clients = {} };
@@ -156,7 +137,7 @@ get '/data' => [format => 'txt'] => sub ($c) {
 websocket '/sync' => sub ($c) {
 
     # Keep connection alive for at least one day
-    $c->inactivity_timeout(24*60*60);
+    $c->inactivity_timeout(app->config('timeout'));
 
     # Lookup corresponding data
     my $session = $c->data->{$c->session('token')};
