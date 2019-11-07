@@ -1,4 +1,5 @@
-use stricte v5.20.0;
+use v5.20.0;
+use strict;
 
 use warnings;
 
@@ -12,6 +13,6 @@ WriteMakefile(
     META_MERGE  => {resources => {
         bugtracker => 'https://github.com/memowe/redeliste/issues',
         repository => 'https://github.com/memowe/redeliste',
-    },
+    }},
     test => {TESTS => 't/*.t'}
 );
