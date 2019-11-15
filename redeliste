@@ -25,9 +25,10 @@ helper generate_token => sub ($self) {
 
 # Full state dump for clients
 helper state_dump => sub ($c) {{
-    session => $c->stash('session_data'),
-    userId  => $c->session('user_id'),
-    wsURL   => $c->url_for('sync')->to_abs->to_string,
+    session      => $c->stash('session_data'),
+    nextSpeakers => $c->next_speakers,
+    userId       => $c->session('user_id'),
+    wsURL        => $c->url_for('sync')->to_abs->to_string,
 }};
 
 # Add someone to a speaker list
@@ -35,6 +36,13 @@ helper request_to_speak => sub ($self, $id) {
     my $token = $self->session('token');
     $self->app->log->debug("Request to speak: $token - $id");
     # TODO
+};
+
+# Calculate next speakers from the list of requests
+helper next_speakers => sub ($self) {
+    my $session  = $self->stash('session_data');
+    my @requests = map {$session->{persons}[$_]} @{$session->{requests}};
+    return \@requests; # TODO
 };
 
 # Send state to all clients for the given session
@@ -67,7 +75,7 @@ post '/start' => sub ($c) {
             spoken  => 0,
             star    => $star,
         }],
-        speaker_ids => [],
+        requests    => [],
         token       => $token,
     };
 

@@ -3,9 +3,16 @@
 <section id="attend">
     <div v-if="session">
         <h1>{{ session.name }}</h1>
+        <h2>Personen</h2>
         <ul id="persons">
             <li v-for="p in session.persons" v-if="p.active">
                 {{ p.name }}
+            </li>
+        </ul>
+        <h2>Redeliste</h2>
+        <ul id="speakers">
+            <li v-for="s in nextSpeakers">
+                {{ s.name }}
             </li>
         </ul>
     </div>

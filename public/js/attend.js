@@ -2,6 +2,7 @@ new Vue({
     el: '#attend',
     data() { return {
         session: null,
+        nextSpeakers: null,
         userId: null,
         wsConnected: false,
         wsURL: null,
@@ -14,7 +15,9 @@ new Vue({
                 this.wsConnected = true;
             };
             this.socket.onmessage = msg => {
-                this.session = JSON.parse(msg.data).session;
+                let data = JSON.parse(msg.data);
+                this.session      = data.session;
+                this.nextSpeakers = data.nextSpeakers;
             };
         },
         disconnect() {
