@@ -9,7 +9,8 @@
             </li>
         </ul>
     </div>
-    <button v-on:click="disconnect" v-if="wsConnected">Disconnect</button>
+    <p v-else>Verbindung geschlossen.</p>
+    <button v-on:click="disconnect" v-if="wsConnected">Beenden</button>
     <button v-on:click="requestSpeak" v-if="wsConnected">Sync!</button>
 </section>
 %= javascript 'https://cdn.jsdelivr.net/npm/vue/dist/vue.js'

@@ -20,6 +20,7 @@ new Vue({
         disconnect() {
             this.socket.close();
             this.wsConnected = false;
+            this.session     = null;
         },
         requestSpeak() {
             this.socket.send('RQSP');
