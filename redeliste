@@ -162,6 +162,9 @@ websocket '/sync' => sub ($c) {
         $person->{active} = 0;
         $c->broadcast($session->{token});
     });
+
+    # Send updated session data to all clients
+    $c->broadcast($session->{token});
 };
 
 # Reset local storage
