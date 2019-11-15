@@ -165,6 +165,12 @@ websocket '/sync' => sub ($c) {
             $c->broadcast;
         }
 
+        # Next speaker
+        elsif ($message eq 'NEXT') {
+            shift @{$session->{requests}};
+            $c->broadcast;
+        }
+
         # Oops?
         else {
             $c->app->log->error("Unknown message $message!");
