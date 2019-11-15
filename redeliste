@@ -16,7 +16,8 @@ helper state_dump => sub ($c) {
 
     # Lookup session
     my $session = $c->data->{$c->session('token')};
-    return $c->reply->not_found unless defined $session;
+    return 'Session ' . $c->session('token') . ' not found.'
+        unless defined $session;
 
     # Prepare data structure
     return {
