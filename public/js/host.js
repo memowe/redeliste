@@ -20,11 +20,6 @@ new Vue({
                 this.nextSpeakers = data.nextSpeakers;
             };
         },
-        disconnect() {
-            this.socket.close();
-            this.wsConnected = false;
-            this.session     = null;
-        },
         requestSpeak() {
             this.socket.send('RQSP');
         },

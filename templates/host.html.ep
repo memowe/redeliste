@@ -18,7 +18,6 @@
         </ul>
     </div>
     <p v-else>Verbindung geschlossen.</p>
-    <button v-on:click="disconnect" v-if="wsConnected">Beenden</button>
     <button v-on:click="requestSpeak" v-if="wsConnected">Redebeitrag</button>
 </section>
 %= javascript 'https://cdn.jsdelivr.net/npm/vue/dist/vue.js'
