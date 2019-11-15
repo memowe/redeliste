@@ -32,10 +32,8 @@ helper state_dump => sub ($c) {{
 }};
 
 # Add someone to a speaker list
-helper request_to_speak => sub ($self, $id) {
-    my $token = $self->session('token');
-    $self->app->log->debug("Request to speak: $token - $id");
-    # TODO
+helper request_to_speak => sub ($c, $id) {
+    push @{$c->stash('session_data')->{requests}}, $id;
 };
 
 # Calculate next speakers from the list of requests
@@ -158,10 +156,19 @@ websocket '/sync' => sub ($c) {
     $c->clients->{$session->{token}}[$person->{id}] = $c->tx;
     $person->{active} = 1;
 
-    # React on a request to speak (message is irrelevant)
-    $c->on(message => sub {
-        $c->request_to_speak($session->{token}, $person->{id});
-        $c->broadcast;
+    # React on a message
+    $c->on(message => sub ($self, $message) {
+
+        # Request to speak
+        if ($message eq 'RQSP') {
+            $c->request_to_speak($person->{id});
+            $c->broadcast;
+        }
+
+        # Oops?
+        else {
+            $c->app->log->error("Unknown message $message!");
+        }
     });
 
     # React on a client leaving
