@@ -11,21 +11,12 @@ helper data => sub { state $data = app->config('init_sessions') // {} };
 # Client connections (SESSION_TOKEN => [PERSON_ID => TX])
 helper clients => sub { state $clients = {} };
 
-# Prepare full state dump for clients
-helper state_dump => sub ($c) {
-
-    # Lookup session
-    my $session = $c->data->{$c->session('token')};
-    return 'Session ' . $c->session('token') . ' not found.'
-        unless defined $session;
-
-    # Prepare data structure
-    return {
-        session => $session,
-        userId  => $c->session('user_id'),
-        wsURL   => $c->url_for('sync')->to_abs->to_string,
-    };
-};
+# Full state dump for clients
+helper state_dump => sub ($c) {{
+    session => $c->stash('session_data'),
+    userId  => $c->session('user_id'),
+    wsURL   => $c->url_for('sync')->to_abs->to_string,
+}};
 
 # Token generator helper
 helper generate_token => sub ($self) {
@@ -40,15 +31,16 @@ helper generate_token => sub ($self) {
 };
 
 # Add someone to a speaker list
-helper request_to_speak => sub ($self, $token, $id) {
+helper request_to_speak => sub ($self, $id) {
+    my $token = $self->session('token');
     $self->app->log->debug("Request to speak: $token - $id");
     # TODO
 };
 
 # Send state to all clients for the given session
-helper broadcast => sub ($self, $token) {
-    $_->send({json => $self->state_dump})
-        for grep {defined} @{$self->clients->{$token}};
+helper broadcast => sub ($self) {
+    my $clients = $self->clients->{$self->session('token')};
+    $_->send({json => $self->state_dump}) for grep {defined} @$clients;
 };
 
 # First steps: static forms only
@@ -86,7 +78,6 @@ post '/start' => sub ($c) {
 
 # Host a session
 get '/host' => sub ($c) {
-    $c->reply->not_found unless defined $c->data->{$c->session('token')};
     $c->reply->not_found unless $c->session('role') eq 'chair';
 };
 
@@ -119,10 +110,20 @@ post '/join' => sub ($c) {
     $c->redirect_to('attend');
 };
 
-# Attend a session
-get '/attend' => sub ($c) {
-    $c->reply->not_found unless defined $c->data->{$c->session('token')};
+# A session has been joined, retrieve its data
+under sub ($c) {
+
+    # Session found?
+    my $session = $c->data->{$c->session('token') // ''};
+    $c->reply->not_found and return unless defined $session;
+
+    # Si!
+    $c->stash(session_data => $session);
+    return 1;
 };
+
+# Attend a session
+get '/attend';
 
 # Read state data dump as JSON
 get '/data' => [format => 'json'] => sub ($c) {
@@ -141,9 +142,8 @@ websocket '/sync' => sub ($c) {
     $c->inactivity_timeout(app->config('timeout'));
 
     # Lookup corresponding data
-    my $session = $c->data->{$c->session('token')};
-    return $c->reply->not_found unless $session;
-    my $person = $session->{persons}[$c->session('user_id')];
+    my $session = $c->stash('session_data');
+    my $person  = $session->{persons}[$c->session('user_id')];
     return $c->reply->not_found unless $person;
 
     # Store connection (data structure is auto-vivified)
@@ -153,18 +153,18 @@ websocket '/sync' => sub ($c) {
     # React on a request to speak (message is irrelevant)
     $c->on(message => sub {
         $c->request_to_speak($session->{token}, $person->{id});
-        $c->broadcast($session->{token});
+        $c->broadcast;
     });
 
     # React on a client leaving
     $c->on(finish => sub {
         $c->clients->{$session->{token}}[$person->{id}] = undef;
         $person->{active} = 0;
-        $c->broadcast($session->{token});
+        $c->broadcast;
     });
 
     # Send updated session data to all clients
-    $c->broadcast($session->{token});
+    $c->broadcast;
 };
 
 # Reset local storage
