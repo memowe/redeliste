@@ -72,7 +72,7 @@ post '/start' => sub ($c) {
             id      => 0,
             name    => $uname,
             active  => 0,
-            spoken  => '',
+            spoken  => 0,
             star    => $star,
         }],
         speaker_ids => [],
@@ -109,7 +109,7 @@ post '/join' => sub ($c) {
         id      => $plen,
         name    => $name,
         active  => 0,
-        spoken  => '',
+        spoken  => 0,
         star    => $star,
     };
     push @$persons, $person;
