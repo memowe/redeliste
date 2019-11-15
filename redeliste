@@ -76,11 +76,6 @@ post '/start' => sub ($c) {
     $c->redirect_to('host');
 };
 
-# Host a session
-get '/host' => sub ($c) {
-    $c->reply->not_found unless $c->session('role') eq 'chair';
-};
-
 # Join a session
 post '/join' => sub ($c) {
 
@@ -120,6 +115,11 @@ under sub ($c) {
     # Si!
     $c->stash(session_data => $session);
     return 1;
+};
+
+# Host a session
+get '/host' => sub ($c) {
+    $c->reply->not_found unless $c->session('role') eq 'chair';
 };
 
 # Attend a session
