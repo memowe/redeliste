@@ -8,4 +8,10 @@
     # Example session useful for debugging
     init_sessions => {
     },
+
+    # Hypnotoad production server configuration
+    hypnotoad => {
+        accepts => 0,
+        workers => 1,
+    },
 };
