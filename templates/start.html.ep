@@ -1,23 +1,35 @@
 % layout 'default';
-% title 'Start a new session';
-%= form_for start => (method => 'post') => begin
-    <table><tbody>
-        <tr>
-            <th><%= label_for 'name' => 'Name:' %></th>
-            <td><%= text_field name => '', id => 'name' %></td>
-        </tr>
-        <tr>
-            <th><%= label_for 'uname' => 'Dein Name:' %></th>
-            <td><%= text_field uname => '', id => 'uname' %></td>
-        </tr>
-        <tr>
-            <th><%= label_for 'sex' => 'Dein Geschlecht:' %></th>
-            <td><%= select_field sex => [
+% title 'Sitzung erstellen';
+%= include 'title', subtitle => 'Sitzung erstellen'
+<section id="form">
+    %= form_for start => (method => 'post') => begin
+    <div class="row">
+        <div class="two columns"></div>
+        <div class="four columns">
+            %= label_for 'name' => 'Name der Sitzung:'
+            %= text_field name => '', id => 'name', class => 'u-full-width'
+        </div>
+        <div class="four columns">
+            %= label_for 'uname' => 'Dein Name:'
+            %= text_field uname => '', id => 'uname', class => 'u-full-width'
+        </div>
+        <div class="two columns"></div>
+    </div>
+    <div class="row">
+        <div class="two columns"></div>
+        <div class="four columns">
+            %= label_for 'sex' => 'Dein Geschlecht:'
+            <%= select_field sex => [
                 [Männlich  => 'male'],
                 [Weiblich  => 'female'],
                 [Sternchen => 'star'],
-            ], id => 'sex' %></td>
-        </tr>
-        <tr><td colspan="2"><%= submit_button 'Start session' %></td></tr>
-    </tbody></table>
-% end
+            ], id => 'sex' %>
+        </div>
+        <div class="four columns create-button">
+            <br>
+            %= submit_button 'Erstellen', class => 'button button-primary'
+        </div>
+        <div class="two columns"></div>
+    </div>
+    % end
+</section>
