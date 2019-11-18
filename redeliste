@@ -48,10 +48,17 @@ helper broadcast => sub ($self) {
     $_->send({json => $self->state_dump}) for grep {defined} @$clients;
 };
 
+# Close all connections
+helper broadclose => sub ($self) {
+    my $clients = $self->clients->{$self->session('token')};
+    $_->finish for grep {defined} @$clients;
+};
+
 # First steps: static forms only
 get '/' => 'choose';
 get '/start';
 get '/join';
+get '/bye';
 
 # Create a session and generate a token for session members
 post '/start' => sub ($c) {
@@ -177,6 +184,12 @@ websocket '/sync' => sub ($c) {
         elsif ($message eq 'NEXTITEM') {
             $session->{requests} = [];
             $c->broadcast;
+        }
+
+        # Close the whole session
+        elsif ($message eq 'CLOSESESSION') {
+            delete $c->data->{$session->{token}};
+            $c->broadclose;
         }
 
         # Oops?

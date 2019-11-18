@@ -28,6 +28,9 @@ new Vue({
                 this.session = data.session;
                 this.nextSpeakerIds = data.nextSpeakers;
             };
+            this.socket.onclose = () => {
+                window.location.replace('/bye');
+            };
         },
         disconnect() {
             this.socket.close();
@@ -43,6 +46,11 @@ new Vue({
         clearItem(confirmText) {
             if (confirm(confirmText)) {
                 this.socket.send('NEXTITEM');
+            }
+        },
+        closeSession(confirmText) {
+            if (confirm(confirmText)) {
+                this.socket.send('CLOSESESSION');
             }
         },
     },
