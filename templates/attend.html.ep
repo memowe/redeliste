@@ -18,7 +18,7 @@
     </div>
     <p v-else>Verbindung geschlossen.</p>
     <button v-on:click="disconnect" v-if="wsConnected">Beenden</button>
-    <button v-on:click="requestSpeak" v-if="wsConnected">Redebeitrag</button>
+    <button v-on:click="requestSpeak" v-if="wsConnected && ! isOnSpeakersList">Redebeitrag</button>
 </section>
 %= javascript 'https://cdn.jsdelivr.net/npm/vue/dist/vue.js'
 %= javascript 'https://cdn.jsdelivr.net/npm/axios/dist/axios.js'

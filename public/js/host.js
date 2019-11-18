@@ -11,6 +11,9 @@ new Vue({
         nextSpeakers() {
             return this.nextSpeakerIds.map(id => this.session.persons[id]);
         },
+        isOnSpeakersList() {
+            return this.nextSpeakerIds.includes(this.userId);
+        },
     },
     methods: {
         connect() {
