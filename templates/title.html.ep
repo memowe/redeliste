@@ -1,0 +1,11 @@
+<section id="title"<%== defined stash('hero') ? 'class="hero"' : '' %>>
+    <div id="title" class="row">
+        <div class="twelve columns">
+        % if (defined stash('hero')) {
+            <h1>Redeliste</h1>
+        % } else {
+            <h2>Redeliste: <strong><%= stash('subtitle') // '' %></strong></h2>
+        % }
+        </div>
+    </div>
+</section>
