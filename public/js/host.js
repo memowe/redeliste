@@ -42,5 +42,5 @@ new Vue({
             this.wsURL   = res.data.wsURL;
             this.connect();
         });
-    }
+    },
 })

@@ -35,7 +35,7 @@ new Vue({
         },
         requestSpeak() {
             this.socket.send('RQSP');
-        }
+        },
     },
     mounted() {
         axios.get('/data.json').then(res => {
@@ -44,5 +44,5 @@ new Vue({
             this.wsURL   = res.data.wsURL;
             this.connect();
         });
-    }
+    },
 })
