@@ -33,7 +33,8 @@ helper state_dump => sub ($c) {{
 
 # Add someone to a speaker list
 helper request_to_speak => sub ($c, $id) {
-    push @{$c->stash('session_data')->{requests}}, $id;
+    my $rqs = $c->stash('session_data')->{requests};
+    push @$rqs, $id unless grep {$_ == $id} @$rqs;
 };
 
 # Calculate next speakers from the list of requests
