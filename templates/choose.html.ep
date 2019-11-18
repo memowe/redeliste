@@ -1,6 +1,19 @@
 % layout 'default';
 % title 'Redeliste';
-<p>
-    %= link_to 'Start a new session'        => 'start'
-    %= link_to 'Join an existing session'   => 'join'
-</p>
+%= include 'title', hero => 1
+<section id="choose">
+    <div class="row">
+        <div class="one column"></div>
+        <div class="five columns">
+            %= link_to join => (class => 'button button-primary u-full-width') => begin
+                Sitzung betreten
+            % end
+        </div>
+        <div class="five columns">
+            %= link_to start => (class => 'button button-primary u-full-width') => begin
+                Sitzung erstellen
+            % end
+        </div>
+        <div class="one column"></div>
+    </div>
+</section>
