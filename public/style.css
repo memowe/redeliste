@@ -1,0 +1,55 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300&display=swap');
+h1, h2 {font-family: 'Open Sans Condensed', sans-serif}
+
+#title,
+#choose {
+    text-align: center;
+}
+
+#title {
+    padding: 1em 1em 0em;
+    background-color: #315482;
+    color: white;
+}
+
+#title.hero {
+    padding: 7em 1em 1em;
+}
+
+#title h1 {
+    font-size: 4rem;
+}
+
+#title h2 {
+    font-size: 2rem;
+    text-align: left;
+}
+
+#title h2 strong {
+    font-weight: bold;
+}
+
+#choose {
+    padding: 3em 1em 2em;
+}
+
+#form {
+    padding: 2em 1em;
+}
+
+#form .join-button,
+#form .create-button {
+    text-align: right;
+}
+
+footer {
+    margin-top: 1em;
+    border-top: 2em solid #f2f2f2;
+    padding-top: 1em;
+    color: #aaa;
+    text-align: center;
+}
+
+footer a {
+    color: #999 !important;
+}
