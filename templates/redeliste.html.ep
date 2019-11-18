@@ -2,8 +2,10 @@
 % title 'Redeliste';
 <main id="redeliste" role="<%= $role %>">
     <div v-if="session">
-        <h1>{{ session.name }} ({{ session.token }})</h1>
-        <p>Role: {{ role }}</p><!-- TODO -->
+        <h1>
+            {{ session.name }}
+            <span v-if="role == 'chair'">({{ session.token }})</span>
+        </h1>
         <h2>Personen</h2>
         <ul id="persons">
             <li v-for="p in session.persons" v-if="p.active">
