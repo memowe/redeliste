@@ -1,6 +1,7 @@
 new Vue({
-    el: '#host',
+    el: '#redeliste',
     data() { return {
+        role: null,
         session: null,
         nextSpeakerIds: [],
         userId: null,
@@ -28,12 +29,20 @@ new Vue({
                 this.nextSpeakerIds = data.nextSpeakers;
             };
         },
+        disconnect() {
+            this.socket.close();
+            this.wsConnected = false;
+            this.session     = null;
+        },
         requestSpeak() {
             this.socket.send('RQSP');
         },
         callSpeaker() {
             this.socket.send('NEXT');
         },
+    },
+    beforeMount() {
+        this.role = this.$el.attributes['role'].value;
     },
     mounted() {
         axios.get('/data.json').then(res => {
