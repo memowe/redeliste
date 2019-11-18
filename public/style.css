@@ -1,6 +1,15 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300&display=swap');
 h1, h2 {font-family: 'Open Sans Condensed', sans-serif}
 
+h3 {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+strong {
+    font-weight: bold;
+}
+
 #title,
 #choose {
     text-align: center;
@@ -25,10 +34,6 @@ h1, h2 {font-family: 'Open Sans Condensed', sans-serif}
     text-align: left;
 }
 
-#title h2 strong {
-    font-weight: bold;
-}
-
 #choose {
     padding: 3em 1em 2em;
 }
@@ -40,6 +45,14 @@ h1, h2 {font-family: 'Open Sans Condensed', sans-serif}
 #form .join-button,
 #form .create-button {
     text-align: right;
+}
+
+#bye {
+    padding: 3em 1em 2em;
+}
+
+#bye .start-button {
+    text-align: center;
 }
 
 footer {
