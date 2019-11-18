@@ -10,6 +10,10 @@ strong {
     font-weight: bold;
 }
 
+p {
+    margin-bottom: 1em;
+}
+
 #title,
 #choose {
     text-align: center;
