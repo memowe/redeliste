@@ -124,11 +124,14 @@ under sub ($c) {
 
 # Host a session
 get '/host' => sub ($c) {
-    $c->reply->not_found unless $c->session('role') eq 'chair';
+    return $c->reply->not_found unless $c->session('role') eq 'chair';
+    $c->render(template => 'redeliste', role => 'chair');
 };
 
 # Attend a session
-get '/attend';
+get '/attend' => sub ($c) {
+    $c->render(template => 'redeliste', role => 'user');
+};
 
 # Read state data dump as JSON
 get '/data' => [format => 'json'] => sub ($c) {

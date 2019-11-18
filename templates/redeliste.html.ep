@@ -1,3 +1,5 @@
+% layout 'default';
+% title 'Redeliste';
 <main id="redeliste" role="<%= $role %>">
     <div v-if="session">
         <h1>{{ session.name }} ({{ session.token }})</h1>
