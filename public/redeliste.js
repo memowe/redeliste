@@ -4,6 +4,7 @@ new Vue({
         role: null,
         session: null,
         nextSpeakerIds: [],
+        listOpen: false,
         userId: null,
         wsConnected: false,
         wsURL: null,
@@ -27,6 +28,7 @@ new Vue({
                 let data = JSON.parse(msg.data);
                 this.session = data.session;
                 this.nextSpeakerIds = data.nextSpeakers;
+                this.listOpen = data.listOpen;
             };
             this.socket.onclose = () => {
                 window.location.replace('/bye');
@@ -42,6 +44,12 @@ new Vue({
         },
         callSpeaker() {
             this.socket.send('NEXT');
+        },
+        closeList() {
+            this.socket.send('CLOSELIST');
+        },
+        openList() {
+            this.socket.send('OPENLIST');
         },
         clearItem(confirmText) {
             if (confirm(confirmText)) {

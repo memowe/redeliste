@@ -1,5 +1,6 @@
 #!/usr/bin/env perl
 use Mojolicious::Lite -signatures;
+use Mojo::JSON qw(true false);
 
 # Load configuration from redeliste.conf
 plugin 'Config';
@@ -27,12 +28,14 @@ helper generate_token => sub ($self) {
 helper state_dump => sub ($c) {{
     session      => $c->stash('session_data'),
     nextSpeakers => $c->next_speakers,
+    listOpen     => $c->stash('session_data')->{list_open} ? true : false,
     userId       => $c->session('user_id'),
     wsURL        => $c->url_for('sync')->to_abs->to_string,
 }};
 
 # Add someone to a speaker list
 helper request_to_speak => sub ($c, $id) {
+    return unless $c->stash('session_data')->{list_open};
     my $rqs = $c->stash('session_data')->{requests};
     push @$rqs, $id unless grep {$_ == $id} @$rqs;
 };
@@ -80,6 +83,7 @@ post '/start' => sub ($c) {
             star    => $star,
         }],
         requests    => [],
+        list_open   => 1,
         token       => $token,
     };
 
@@ -177,6 +181,18 @@ websocket '/sync' => sub ($c) {
         # Next speaker
         elsif ($message eq 'NEXT') {
             shift @{$session->{requests}};
+            $c->broadcast;
+        }
+
+        # Close speakers list
+        elsif ($message eq 'CLOSELIST') {
+            $session->{list_open} = 0;
+            $c->broadcast;
+        }
+
+        # (Re-) Open speakers list
+        elsif ($message eq 'OPENLIST') {
+            $session->{list_open} = 1;
             $c->broadcast;
         }
 
