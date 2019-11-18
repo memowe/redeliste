@@ -40,6 +40,11 @@ new Vue({
         callSpeaker() {
             this.socket.send('NEXT');
         },
+        clearItem(confirmText) {
+            if (confirm(confirmText)) {
+                this.socket.send('NEXTITEM');
+            }
+        },
     },
     beforeMount() {
         this.role = this.$el.attributes['data-role'].value;

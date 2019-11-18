@@ -173,6 +173,12 @@ websocket '/sync' => sub ($c) {
             $c->broadcast;
         }
 
+        # Next agenda item
+        elsif ($message eq 'NEXTITEM') {
+            $session->{requests} = [];
+            $c->broadcast;
+        }
+
         # Oops?
         else {
             $c->app->log->error("Unknown message $message!");

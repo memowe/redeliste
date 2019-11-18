@@ -21,6 +21,7 @@
         </ul>
     </div>
     <p v-else>Verbindung geschlossen.</p>
+    <button v-if="role == 'chair'" v-on:click="clearItem('Nächster TOP?')">Nächster TOP</button>
     <button v-if="role == 'user' && wsConnected" v-on:click="disconnect">Beenden</button>
     <button v-on:click="requestSpeak" v-if="wsConnected && ! isOnSpeakersList">Redebeitrag</button>
 </main>
