@@ -1,0 +1,25 @@
+<main id="redeliste" role="<%= $role %>">
+    <div v-if="session">
+        <h1>{{ session.name }} ({{ session.token }})</h1>
+        <p>Role: {{ role }}</p><!-- TODO -->
+        <h2>Personen</h2>
+        <ul id="persons">
+            <li v-for="p in session.persons" v-if="p.active">
+                {{ p.name }}
+            </li>
+        </ul>
+        <h2>Redeliste</h2>
+        <button v-if="role == 'chair' && nextSpeakers.length > 0" v-on:click="callSpeaker">Nächste Rede</button>
+        <ul id="speakers">
+            <li v-for="s in nextSpeakers">
+                {{ s.name }}
+            </li>
+        </ul>
+    </div>
+    <p v-else>Verbindung geschlossen.</p>
+    <button v-if="role == 'user' && wsConnected" v-on:click="disconnect">Beenden</button>
+    <button v-on:click="requestSpeak" v-if="wsConnected && ! isOnSpeakersList">Redebeitrag</button>
+</main>
+%= javascript 'https://cdn.jsdelivr.net/npm/vue/dist/vue.js'
+%= javascript 'https://cdn.jsdelivr.net/npm/axios/dist/axios.js'
+%= javascript '/redeliste.js'
