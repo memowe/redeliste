@@ -2,11 +2,16 @@ new Vue({
     el: '#attend',
     data() { return {
         session: null,
-        nextSpeakers: null,
+        nextSpeakerIds: [],
         userId: null,
         wsConnected: false,
         wsURL: null,
     }},
+    computed: {
+        nextSpeakers() {
+            return this.nextSpeakerIds.map(id => this.session.persons[id]);
+        },
+    },
     methods: {
         connect() {
             if (! this.wsURL) return;
@@ -16,8 +21,8 @@ new Vue({
             };
             this.socket.onmessage = msg => {
                 let data = JSON.parse(msg.data);
-                this.session      = data.session;
-                this.nextSpeakers = data.nextSpeakers;
+                this.session = data.session;
+                this.nextSpeakerIds = data.nextSpeakers;
             };
         },
         disconnect() {

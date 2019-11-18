@@ -38,9 +38,7 @@ helper request_to_speak => sub ($c, $id) {
 
 # Calculate next speakers from the list of requests
 helper next_speakers => sub ($self) {
-    my $session  = $self->stash('session_data');
-    my @requests = map {$session->{persons}[$_]} @{$session->{requests}};
-    return \@requests; # TODO
+    return $self->stash('session_data')->{requests}; # TODO
 };
 
 # Send state to all clients for the given session

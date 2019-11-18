@@ -10,7 +10,7 @@
             </li>
         </ul>
         <h2>Redeliste</h2>
-        <button v-on:click="callSpeaker" v-if="nextSpeakers">Nächste Rede</button>
+        <button v-on:click="callSpeaker" v-if="nextSpeakers.length > 0">Nächste Rede</button>
         <ul id="speakers">
             <li v-for="s in nextSpeakers">
                 {{ s.name }}
