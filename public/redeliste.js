@@ -42,7 +42,7 @@ new Vue({
         },
     },
     beforeMount() {
-        this.role = this.$el.attributes['role'].value;
+        this.role = this.$el.attributes['data-role'].value;
     },
     mounted() {
         axios.get('/data.json').then(res => {

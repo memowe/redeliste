@@ -1,6 +1,6 @@
 % layout 'default';
 % title 'Redeliste';
-<main id="redeliste" role="<%= $role %>">
+<main id="redeliste" data-role="<%= $role %>">
     <div v-if="session">
         <h1>
             {{ session.name }}
