@@ -8,7 +8,7 @@
         </h1>
         <h2>Personen</h2>
         <ul id="persons">
-            <li v-for="p in session.persons" v-if="p.active">
+            <li v-for="p in persons" v-if="p.active">
                 {{ p.name }}
             </li>
         </ul>

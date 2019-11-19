@@ -10,6 +10,13 @@ new Vue({
         wsURL: null,
     }},
     computed: {
+        persons() {
+            return this.session.persons.sort((a, b) => {
+                let an = a.name.toUpperCase();
+                let bn = b.name.toUpperCase();
+                return an < bn ? -1 : an == bn ? 0 : 1;
+            });
+        },
         nextSpeakers() {
             return this.nextSpeakerIds.map(id => this.session.persons[id]);
         },
