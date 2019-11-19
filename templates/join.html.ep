@@ -7,7 +7,7 @@
         <div class="two columns"></div>
         <div class="four columns">
             %= label_for 'token' => 'Code:'
-            %= text_field token => '', id => 'token', class => 'u-full-width'
+            %= text_field token => '', id => 'token', class => 'u-full-width', onkeyup => 'this.value = this.value.toUpperCase();'
         </div>
         <div class="four columns">
             %= label_for 'name' => 'Dein Name:'
