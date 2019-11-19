@@ -217,9 +217,19 @@ websocket '/sync' => sub ($c) {
 
     # React on a client leaving
     $c->on(finish => sub {
-        $c->clients->{$session->{token}}[$person->{id}] = undef;
-        $person->{active} = 0;
-        $c->broadcast;
+
+        # Chair: close everything
+        if ($c->session('role') eq 'chair') {
+            delete $c->data->{$session->{token}};
+            $c->broadclose;
+        }
+
+        # User: just let them know
+        else {
+            $c->clients->{$session->{token}}[$person->{id}] = undef;
+            $person->{active} = 0;
+            $c->broadcast;
+        }
     });
 
     # Send updated session data to all clients
