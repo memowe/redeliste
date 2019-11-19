@@ -11,7 +11,7 @@ new Vue({
     }},
     computed: {
         persons() {
-            return this.session.persons.sort((a, b) => {
+            return [...this.session.persons].sort((a, b) => {
                 let an = a.name.toUpperCase();
                 let bn = b.name.toUpperCase();
                 return an < bn ? -1 : an == bn ? 0 : 1;
