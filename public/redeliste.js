@@ -45,6 +45,7 @@ new Vue({
             this.socket.close();
             this.wsConnected = false;
             this.session     = null;
+            window.location.replace('/bye');
         },
         requestSpeak() {
             this.socket.send('RQSP');
