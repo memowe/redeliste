@@ -19,9 +19,6 @@
                 <button v-bind:disabled="nextSpeakers.length == 0" v-on:click="callSpeaker" class="button-primary u-full-width">Rede</button>
             </div>
             <div class="two columns">
-                <button v-bind:disabled="isOnSpeakersList || ! listOpen" v-on:click="requestSpeak" class="u-full-width">Melden</button>
-            </div>
-            <div class="two columns">
                 <button v-if="listOpen" v-on:click="closeList" class="u-full-width">Zu</button>
                 <button v-if="! listOpen" v-on:click="openList" class="u-full-width">Auf</button>
             </div>
@@ -29,7 +26,9 @@
                 <button v-on:click="clearItem('Nächster TOP?')" class="u-full-width">TOP</button>
             </div>
             <div class="two columns">
-                <button v-on:click="closeSession('Sitzung wirklich beenden?')" class="u-full-width">Beenden</button>
+            </div>
+            <div class="two columns">
+                <button v-bind:disabled="isOnSpeakersList || ! listOpen" v-on:click="requestSpeak" class="u-full-width button-primary">Melden</button>
             </div>
             <div class="one column"></div>
         </div>
@@ -73,9 +72,10 @@
             <div class="one column"></div>
         </div>
 
-        <div v-if="role == 'user'" class="row user-buttons">
+        <div class="row exit-button">
             <div class="eleven columns">
-                <button v-on:click="disconnect">Beenden</button>
+                <button v-if="role == 'chair'" v-on:click="closeSession('Sitzung wirklich beenden?')">Beenden</button>
+                <button v-else v-on:click="disconnect">Beenden</button>
             </div>
             <div class="one column"></div>
         </div>

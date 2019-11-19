@@ -122,7 +122,7 @@ button.button-primary:hover {
     color: #60707d;
 }
 
-#redeliste .user-buttons {
+#redeliste .exit-button {
     text-align: right;
     margin-top: 2em;
 }
