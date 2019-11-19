@@ -1,33 +1,97 @@
 % layout 'default';
-% title 'Redeliste';
+% title $session_data->{name};
+%= include 'title', subtitle => $session_data->{name}, token => $role eq 'chair'? $session_data->{token} : undef;
+
 <main id="redeliste" data-role="<%= $role %>">
-    <div v-if="session">
-        <h1>
-            {{ session.name }}
-            <span v-if="role == 'chair'">({{ session.token }})</span>
-        </h1>
-        <h2>Personen</h2>
-        <ul id="persons">
-            <li v-for="p in session.persons" v-if="p.active">
-                {{ p.name }}
-            </li>
-        </ul>
-        <h2>Redeliste</h2>
-        <button v-if="role == 'chair' && nextSpeakers.length > 0" v-on:click="callSpeaker">Nächste Rede</button>
-        <ul id="speakers">
-            <li v-for="s in nextSpeakers">
-                {{ s.name }}
-            </li>
-        </ul>
-    </div>
-    <p v-else>Verbindung geschlossen.</p>
-    <button v-if="role == 'chair'" v-on:click="clearItem('Nächster TOP?')">Nächster TOP</button>
-    <button v-if="role == 'user' && wsConnected" v-on:click="disconnect">Beenden</button>
-    <button v-on:click="requestSpeak" v-if="wsConnected && ! isOnSpeakersList" v-bind:disabled="! listOpen">Redebeitrag</button>
-    <button v-if="role == 'chair' && listOpen" v-on:click="closeList">Redeliste schließen</button>
-    <button v-if="role == 'chair' && ! listOpen" v-on:click="openList">Redeliste öffnen</button>
-    <button v-if="role == 'chair'" v-on:click="closeSession('Sitzung wirklich beenden?')">Sitzung beenden</button>
+    <section v-if="wsConnected">
+
+        <div v-if="role == 'user'" class="row request-button">
+            <div class="three columns"></div>
+            <div class="six columns">
+                <button v-bind:disabled="isOnSpeakersList || ! listOpen" v-on:click="requestSpeak" class="u-full-width button-primary">Melden</button>
+            </div>
+            <div class="three column"></div>
+        </div>
+
+        <div v-if="role == 'chair'" class="row chair-buttons">
+            <div class="one column"></div>
+            <div class="two columns">
+                <button v-bind:disabled="nextSpeakers.length == 0" v-on:click="callSpeaker" class="button-primary u-full-width">Rede</button>
+            </div>
+            <div class="two columns">
+                <button v-bind:disabled="isOnSpeakersList || ! listOpen" v-on:click="requestSpeak" class="u-full-width">Melden</button>
+            </div>
+            <div class="two columns">
+                <button v-if="listOpen" v-on:click="closeList" class="u-full-width">Zu</button>
+                <button v-if="! listOpen" v-on:click="openList" class="u-full-width">Auf</button>
+            </div>
+            <div class="two columns">
+                <button v-on:click="clearItem('Nächster TOP?')" class="u-full-width">TOP</button>
+            </div>
+            <div class="two columns">
+                <button v-on:click="closeSession('Sitzung wirklich beenden?')" class="u-full-width">Beenden</button>
+            </div>
+            <div class="one column"></div>
+        </div>
+
+        <div class="row">
+            <div class="one column"></div>
+            <div class="five columns list-table">
+                <h3>Redeliste</h3>
+                <table class="u-full-width">
+                    <thead>
+                        <th>Name</th>
+                        <th>w/*</th>
+                        <th>Geredet</th>
+                    </thead>
+                    <tbody>
+                        <tr v-for="s in nextSpeakers" v-bind:class="{inactive: ! s.active}">
+                            <td>{{ s.name }}</td>
+                            <td>{{ s.star ? 'Ja' : 'Nein' }}</td>
+                            <td>{{ s.spoken ? 'Ja' : 'Nein' }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="five columns persons-table">
+                <h3>Teilnehmende</h3>
+                <table class="u-full-width">
+                    <thead><tr>
+                        <th>Name</th>
+                        <th>w/*</th>
+                        <th>Geredet</th>
+                    </tr></thead>
+                    <tbody>
+                        <tr v-for="p in persons" v-bind:class="{inactive: ! p.active}">
+                            <td>{{ p.name }}</td>
+                            <td>{{ p.star ? 'Ja' : 'Nein' }}</td>
+                            <td>{{ p.spoken ? 'Ja' : 'Nein' }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="one column"></div>
+        </div>
+
+        <div v-if="role == 'user'" class="row user-buttons">
+            <div class="eleven columns">
+                <button v-on:click="disconnect">Beenden</button>
+            </div>
+            <div class="one column"></div>
+        </div>
+
+    </section>
+
+    <section v-else>
+        <h3>Verbindung geschlossen.</h3>
+        <p>
+            %= link_to choose => (class => 'button button-primary') => begin
+                Start
+            % end
+        </p>
+    </section>
 </main>
+
 %= javascript 'https://cdn.jsdelivr.net/npm/vue/dist/vue.js'
 %= javascript 'https://cdn.jsdelivr.net/npm/axios/dist/axios.js'
 %= javascript '/redeliste.js'

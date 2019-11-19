@@ -1,0 +1,149 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300&display=swap');
+h1, h2 {
+    margin: 1.5em 0 .8em;
+    font-family: 'Open Sans Condensed', sans-serif;
+}
+
+h3 {
+    margin: 1.5em 0 .8em;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+h1:first-child,
+h2:first-child,
+h3:first-child {
+    margin-top: .5em;
+}
+
+strong {
+    font-weight: bold;
+}
+
+p {
+    margin-bottom: 1em;
+}
+
+a.button,
+button {
+    background-color: #d3e1ed;
+    border-width: 0 !important;
+}
+a.button[disabled],
+button[disabled] {
+    background-color: #eee;
+}
+
+
+a.button.button-primary,
+input.button.button-primary,
+button.button-primary {
+    background-color: #4182d9;
+    color: white;
+    border-width: 0;
+}
+a.button.button-primary[disabled],
+input.button.button-primary[disabled],
+button.button-primary[disabled] {
+    background-color: #999 !important;
+    color: white !important;
+    border-width: 0 !important;
+}
+a.button.button-primary:hover,
+input.button.button-primary:hover,
+button.button-primary:hover {
+    background-color: #315482;
+}
+
+#title {
+    text-align: center;
+    padding: 1em;
+    margin-bottom: 4em;
+    background-color: #315482;
+    color: white;
+}
+
+#title.hero {
+    padding: 8em 1em 1em;
+}
+
+#title h1 {
+    font-size: 4rem;
+    margin: 0
+}
+
+#title h2 {
+    font-size: 2rem;
+    text-align: left;
+    margin: 0;
+}
+
+#title .token {
+    float: right;
+}
+
+#redeliste {
+    margin-left: .5em;
+    margin-right: .5em;
+}
+
+#redeliste .request-button {
+    margin: 1em 0;
+}
+
+#redeliste table {
+    margin-bottom: .5em;
+}
+
+#redeliste .list-table tbody tr:first-child th,
+#redeliste .list-table tbody tr:first-child td {
+    background-color: #fff4bd;
+    font-weight: bold;
+}
+
+#redeliste .list-table tr.inactive td {
+    background-color: #ebeef0 !important;
+    color: #60707d;
+    font-weight: normal !important;
+}
+
+#redeliste .persons-table {
+    background-color: #d3e1ed;
+    color: #53626e;
+}
+
+#redeliste .persons-table th,
+#redeliste .persons-table td {
+    border-color: #7b8d9c;
+}
+
+#redeliste .persons-table tr.inactive td {
+    background-color: #c1d1de;
+    color: #60707d;
+}
+
+#redeliste .user-buttons {
+    text-align: right;
+    margin-top: 2em;
+}
+
+#form .join-button,
+#form .create-button {
+    text-align: right;
+}
+
+#bye .start-button {
+    text-align: center;
+}
+
+footer {
+    margin-top: 3em;
+    border-top: 2em solid #f2f2f2;
+    padding-top: 1em;
+    color: #aaa;
+    text-align: center;
+}
+
+footer a {
+    color: #999 !important;
+}

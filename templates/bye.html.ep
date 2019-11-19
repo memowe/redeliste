@@ -1,5 +1,17 @@
 % layout 'default';
 % title 'Bye!';
-<h1>Die Sitzung wurde beendet.</h1>
-<p>Vielen Dank, Sie haben eine einfache Redeliste sehr glücklich gemacht!</p>
-<button onclick="window.location.replace('<%= url_for('choose')->to_abs %>')">Start</button>
+%= include 'title', subtitle => 'Sitzung beendet'
+<section id="bye">
+    <div class="row">
+        <div class="three columns"></div>
+        <div class="six columns">
+            <h3>Die Sitzung wurde beendet.</h3>
+            <p>Vielen Dank, Sie haben eine einfache Redeliste sehr glücklich gemacht!</p>
+            <p class="start-button">
+                %= link_to choose => (class => 'button button-primary') => begin
+                    Start
+                % end
+        </div>
+        <div class="three columns"></div>
+    </div>
+</section>

@@ -1,23 +1,35 @@
 % layout 'default';
-% title 'Join a session';
-%= form_for join => (method => 'post') => begin
-    <table><tbody>
-        <tr>
-            <th><%= label_for 'token' => 'Code:' %></th>
-            <td><%= text_field token => '', id => 'token' %></td>
-        </tr>
-        <tr>
-            <th><%= label_for 'name' => 'Name:' %></th>
-            <td><%= text_field name => '', id => 'name' %></td>
-        </tr>
-        <tr>
-            <th><%= label_for 'sex' => 'Geschlecht:' %></th>
-            <td><%= select_field sex => [
+% title 'Sitzung betreten';
+%= include 'title', subtitle => 'Sitzung betreten'
+<section id="form">
+    %= form_for join => (method => 'post') => begin
+    <div class="row">
+        <div class="two columns"></div>
+        <div class="four columns">
+            %= label_for 'token' => 'Code:'
+            %= text_field token => '', id => 'token', class => 'u-full-width'
+        </div>
+        <div class="four columns">
+            %= label_for 'name' => 'Dein Name:'
+            %= text_field name => '', id => 'name', class => 'u-full-width'
+        </div>
+        <div class="two columns"></div>
+    </div>
+    <div class="row">
+        <div class="two columns"></div>
+        <div class="four columns">
+            %= label_for 'sex' => 'Geschlecht:'
+            <%= select_field sex => [
                 [Männlich  => 'male'],
                 [Weiblich  => 'female'],
                 [Sternchen => 'star'],
-            ], id => 'sex' %></td>
-        </tr>
-        <tr><td colspan="2"><%= submit_button 'Join session' %></td></tr>
-    </tbody></table>
-% end
+            ], id => 'sex' %>
+        </div>
+        <div class="four columns join-button">
+            <br>
+            %= submit_button 'Betreten', class => 'button button-primary'
+        </div>
+        <div class="two columns"></div>
+    </div>
+    % end
+</section>
