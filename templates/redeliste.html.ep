@@ -48,7 +48,7 @@
                         <tr v-for="s in nextSpeakers" v-bind:class="{inactive: ! s.active}">
                             <td>{{ s.name }}</td>
                             <td>{{ s.star ? 'Ja' : 'Nein' }}</td>
-                            <td>{{ s.spoken ? 'Ja' : 'Nein' }}</td>
+                            <td>{{ s.spoken }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -65,7 +65,7 @@
                         <tr v-for="p in persons" v-bind:class="{inactive: ! p.active}">
                             <td>{{ p.name }}</td>
                             <td>{{ p.star ? 'Ja' : 'Nein' }}</td>
-                            <td>{{ p.spoken ? 'Ja' : 'Nein' }}</td>
+                            <td>{{ p.spoken }}</td>
                         </tr>
                     </tbody>
                 </table>

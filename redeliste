@@ -180,7 +180,8 @@ websocket '/sync' => sub ($c) {
 
         # Next speaker
         elsif ($message eq 'NEXT') {
-            shift @{$session->{requests}};
+            my $id = shift @{$session->{requests}};
+            $session->{persons}[$id]->{spoken}++;
             $c->broadcast;
         }
 
