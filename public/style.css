@@ -87,7 +87,8 @@ button.button-primary:hover {
     margin-right: .5em;
 }
 
-#redeliste .request-button {
+#redeliste .request-button,
+#redeliste .chair-buttons {
     margin: 1em 0;
 }
 
