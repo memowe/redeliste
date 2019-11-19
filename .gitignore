@@ -3,3 +3,6 @@
 
 # Config file
 redeliste.conf
+
+# Hypnotoad production server file
+hypnotoad.pid
