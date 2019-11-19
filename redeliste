@@ -199,6 +199,7 @@ websocket '/sync' => sub ($c) {
         # Next agenda item
         elsif ($message eq 'NEXTITEM') {
             $session->{requests} = [];
+            $session->{list_open} = 1;
             $c->broadcast;
         }
 
