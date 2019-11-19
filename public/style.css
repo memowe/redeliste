@@ -82,6 +82,51 @@ button.button-primary:hover {
     float: right;
 }
 
+#redeliste {
+    margin-left: .5em;
+    margin-right: .5em;
+}
+
+#redeliste .request-button {
+    margin: 1em 0;
+}
+
+#redeliste table {
+    margin-bottom: .5em;
+}
+
+#redeliste .list-table tbody tr:first-child th,
+#redeliste .list-table tbody tr:first-child td {
+    background-color: #fff4bd;
+    font-weight: bold;
+}
+
+#redeliste .list-table tr.inactive td {
+    background-color: #ebeef0 !important;
+    color: #60707d;
+    font-weight: normal !important;
+}
+
+#redeliste .persons-table {
+    background-color: #d3e1ed;
+    color: #53626e;
+}
+
+#redeliste .persons-table th,
+#redeliste .persons-table td {
+    border-color: #7b8d9c;
+}
+
+#redeliste .persons-table tr.inactive td {
+    background-color: #c1d1de;
+    color: #60707d;
+}
+
+#redeliste .user-buttons {
+    text-align: right;
+    margin-top: 2em;
+}
+
 #form .join-button,
 #form .create-button {
     text-align: right;
