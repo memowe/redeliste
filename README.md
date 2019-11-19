@@ -2,6 +2,10 @@
 
 Eine Echtzeit-Multiuser-Redeliste.
 
+![][screenshot]
+
+[screenshot]: public/redeliste.png
+
 ## Dependencies
 
 - [Perl][Perl] 5.20
