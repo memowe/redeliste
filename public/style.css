@@ -16,23 +16,25 @@ p {
 
 #title {
     text-align: center;
-    padding: 1em 1em 0em;
+    padding: 1em;
     margin-bottom: 4em;
     background-color: #315482;
     color: white;
 }
 
 #title.hero {
-    padding: 8em 1em 0em;
+    padding: 8em 1em 1em;
 }
 
 #title h1 {
     font-size: 4rem;
+    margin: 0
 }
 
 #title h2 {
     font-size: 2rem;
     text-align: left;
+    margin: 0;
 }
 
 #form .join-button,
