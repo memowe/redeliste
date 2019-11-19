@@ -15,9 +15,9 @@ helper clients => sub { state $clients = {} };
 # Token generator helper
 helper generate_token => sub ($self) {
 
-    # Generate token with 6 characters
+    # Generate token with 5 characters
     my @chars = ('A'..'Z', 1 .. 9);
-    my $token = join '' => map $chars[rand @chars] => 1 .. 6;
+    my $token = join '' => map $chars[rand @chars] => 1 .. 5;
 
     # Done, if doesn't exist
     return $token unless exists $self->data->{$token};
