@@ -4,7 +4,10 @@
         % if (defined stash('hero')) {
             <h1>Redeliste</h1>
         % } else {
-            <h2>Redeliste: <strong><%= stash('subtitle') // '' %></strong></h2>
+            % if (defined stash('token')) {
+                <span class="token">Token: <strong><%= stash('token') %></strong></span>
+            % }
+            <h2>Redeliste: <strong><%= stash('subtitle') // '' %></strong>
         % }
         </div>
     </div>

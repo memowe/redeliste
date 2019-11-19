@@ -1,5 +1,7 @@
 % layout 'default';
-% title 'Redeliste';
+% title $session_data->{name};
+%= include 'title', subtitle => $session_data->{name}, token => $role eq 'chair'? $session_data->{token} : undef;
+
 <main id="redeliste" data-role="<%= $role %>">
     <div v-if="session">
         <h1>
