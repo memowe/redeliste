@@ -13,6 +13,27 @@
             <div class="three column"></div>
         </div>
 
+        <div v-if="role == 'chair'" class="row chair-buttons">
+            <div class="one column"></div>
+            <div class="two columns">
+                <button v-bind:disabled="nextSpeakers.length == 0" v-on:click="callSpeaker" class="button-primary u-full-width">Rede</button>
+            </div>
+            <div class="two columns">
+                <button v-bind:disabled="isOnSpeakersList || ! listOpen" v-on:click="requestSpeak" class="u-full-width">Melden</button>
+            </div>
+            <div class="two columns">
+                <button v-if="listOpen" v-on:click="closeList" class="u-full-width">Zu</button>
+                <button v-if="! listOpen" v-on:click="openList" class="u-full-width">Auf</button>
+            </div>
+            <div class="two columns">
+                <button v-on:click="clearItem('Nächster TOP?')" class="u-full-width">TOP</button>
+            </div>
+            <div class="two columns">
+                <button v-on:click="closeSession('Sitzung wirklich beenden?')" class="u-full-width">Beenden</button>
+            </div>
+            <div class="one column"></div>
+        </div>
+
         <div class="row">
             <div class="one column"></div>
             <div class="five columns list-table">
