@@ -24,6 +24,37 @@ p {
     margin-bottom: 1em;
 }
 
+a.button,
+button {
+    background-color: #d3e1ed;
+    border-width: 0 !important;
+}
+a.button[disabled],
+button[disabled] {
+    background-color: #eee;
+}
+
+
+a.button.button-primary,
+input.button.button-primary,
+button.button-primary {
+    background-color: #4182d9;
+    color: white;
+    border-width: 0;
+}
+a.button.button-primary[disabled],
+input.button.button-primary[disabled],
+button.button-primary[disabled] {
+    background-color: #999 !important;
+    color: white !important;
+    border-width: 0 !important;
+}
+a.button.button-primary:hover,
+input.button.button-primary:hover,
+button.button-primary:hover {
+    background-color: #315482;
+}
+
 #title {
     text-align: center;
     padding: 1em;
