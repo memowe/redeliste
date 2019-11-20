@@ -6,6 +6,7 @@ use warnings;
 use ExtUtils::MakeMaker;
 
 WriteMakefile(
+    NAME        => 'redeliste',
     VERSION     => '0.01',
     AUTHOR      => 'Mirko Westermeier <mirko@westermeier.de>',
     LICENSE     => 'mit',
