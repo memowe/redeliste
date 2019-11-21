@@ -1,4 +1,4 @@
-# Redeliste
+# Redeliste [![Build Status](https://travis-ci.com/memowe/redeliste.svg?branch=master)](https://travis-ci.com/memowe/redeliste)
 
 Eine Echtzeit-Multiuser-Redeliste.
 
