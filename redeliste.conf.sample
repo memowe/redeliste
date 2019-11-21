@@ -5,10 +5,6 @@
     # Websocket session timeout in seconds
     timeout => 24 * 60 * 60, # 1 day
 
-    # Example session useful for debugging
-    init_sessions => {
-    },
-
     # Hypnotoad production server configuration
     hypnotoad => {
         accepts => 0,

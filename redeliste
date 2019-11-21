@@ -7,7 +7,7 @@ plugin 'Config';
 app->secrets([app->config('secret')]);
 
 # In-memory "database"
-helper data => sub { state $data = app->config('init_sessions') // {} };
+helper data => sub { state $data = {} };
 
 # Client connections (SESSION_TOKEN => [PERSON_ID => TX])
 helper clients => sub { state $clients = {} };
