@@ -41,6 +41,37 @@ subtest 'Constructor' => sub {
     };
 };
 
+subtest Add => sub {
+    my $session = Redeliste::Session->new(token => 'FOOBAR');
+
+    subtest Person => sub {
+        is $session->persons->size => 0, 'No persons yet';
+        my $person = $session->add_person;
+        is $session->persons->size => 1, 'One person';
+        is $session->persons->[0] => $person, 'Correct person';
+        is $session->persons->[0]->id => 0, 'Correct person ID';
+    };
+
+    subtest Request => sub {
+        my $person = $session->add_person;
+        is $session->requests->size => 0, 'No requests yet';
+        $session->add_request($person);
+        is $session->requests->size => 1, 'One request';
+        is $session->requests->[0] => $person->id, 'Right request';
+    };
+};
+
+subtest 'Get request persons' => sub {
+    my $session = Redeliste::Session->new(token => 'QUUX');
+    my $person1 = $session->add_person;
+    my $person2 = $session->add_person;
+    is $session->persons->size => 2, 'Got two persons';
+    $session->add_request($person2)->add_request($person1);
+    is_deeply $session->requests->to_array => [1, 0], 'Correct requests';
+    is_deeply $session->get_request_persons->to_array
+        => [$person2, $person1], 'Correct person array';
+};
+
 subtest 'Data export' => sub {
     my $data = Redeliste::Session->new(
         token       => 'XNORFZT',
