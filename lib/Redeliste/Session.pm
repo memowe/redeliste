@@ -13,8 +13,9 @@ has list_open   => 1;
 
 sub add_person ($self, @args) {
     my $id = @{$self->persons};
-    push @{$self->persons}, Redeliste::Person->new(id => $id, @args);
-    return $self;
+    my $person = Redeliste::Person->new(id => $id, @args);
+    push @{$self->persons}, $person;
+    return $person;
 }
 
 sub add_request ($self, $person) {
