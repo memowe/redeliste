@@ -61,30 +61,22 @@ post '/start' => sub ($c) {
 # Join a session
 post '/join' => sub ($c) {
 
-    # Prepare data
-    my $name = $c->param('name') // ('Anonymous' . int(rand 10_000));
-    my $star = $c->param('sex') eq 'male' ? '' : 1;
-
     # Lookup session
-    my $token   = $c->param('token');
-    my $session = $c->model->{$token};
+    my $session = $c->model->sessions->{$c->param('token')};
     return $c->reply->not_found unless defined $session;
 
     # Inject data
-    my $persons = $session->{persons};
-    my $plen    = scalar @$persons;
-    my $person  = {
-        id      => $plen,
-        name    => $name,
-        active  => 0,
-        spoken  => 0,
-        star    => $star,
-    };
-    push @$persons, $person;
+    my $person = $session->add_person(
+        name => $c->param('name') // ('Anonymous' . int(rand 10_000)),
+        star => $c->param('sex') ne 'male',
+    );
 
     # Store and work with it
-    $c->session({token => $token, person_id => $person->{id}, role => 'user'});
-    $c->redirect_to('attend');
+    $c->session(
+        token       => $session->token,
+        person_id   => $person->id,
+        role        => 'user'
+    )->redirect_to('attend');
 };
 
 # A session has been joined, retrieve its data
