@@ -7,6 +7,7 @@ use Test::More;
 use Test::Exception;
 
 use Redeliste::Person;
+use Mojo::Collection 'c';
 
 use_ok 'Redeliste::Session';
 
@@ -44,7 +45,7 @@ subtest 'Data export' => sub {
     my $data = Redeliste::Session->new(
         token       => 'XNORFZT',
         name        => 'Foo session',
-        persons     => [Redeliste::Person->new(id => 42)],
+        persons     => c(Redeliste::Person->new(id => 42)),
         requests    => [0],
         list_open   => '',
     )->to_hash;

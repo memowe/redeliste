@@ -27,11 +27,19 @@ sub get_request_persons ($self) {
 }
 
 sub to_hash ($self) {
-    my %hash = %$self;
-    while (my ($k, $v) = each %hash) {
-        $hash{$k} = $v->to_hash if blessed $v and $v->can('to_hash');
+
+    # Prepare hash
+    my %hash = map {$_ => $self->$_}
+        qw(token name persons requests list_open);
+
+    # Handle collections
+    for my $attr (keys %hash) {
+        next unless ref($hash{$attr}) eq 'Mojo::Collection';
+        $hash{$attr} = $hash{$attr}->map(sub {
+            blessed($_) and $_->can('to_hash') ? $_->to_hash : $_
+        })->to_array;
     }
-    return { %$self };
+    return \%hash;
 }
 
 1;

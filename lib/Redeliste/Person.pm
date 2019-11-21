@@ -8,7 +8,7 @@ has spoken  => 0;
 has star    => '';
 
 sub to_hash ($self) {
-    return { %$self };
+    return { map {$_ => $self->$_} qw(id name active spoken star) };
 }
 
 1;
