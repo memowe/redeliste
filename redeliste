@@ -83,7 +83,7 @@ post '/join' => sub ($c) {
 under sub ($c) {
 
     # Session found?
-    my $session = $c->model->{$c->session('token') // ''};
+    my $session = $c->model->sessions->{$c->session('token')};
     return $c->reply->not_found unless defined $session;
 
     # Si!
