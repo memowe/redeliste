@@ -10,8 +10,8 @@
             %= text_field name => '', id => 'name', class => 'u-full-width'
         </div>
         <div class="four columns">
-            %= label_for 'uname' => 'Dein Name:'
-            %= text_field uname => '', id => 'uname', class => 'u-full-width'
+            %= label_for 'pname' => 'Dein Name:'
+            %= text_field pname => '', id => 'pname', class => 'u-full-width'
         </div>
         <div class="two columns"></div>
     </div>

@@ -18,7 +18,7 @@ helper state_dump => sub ($c) {
     session      => $session->to_hash,
     nextSpeakers => $session->get_next_speaker_ids,
     listOpen     => $session->list_open ? true : false,
-    userId       => $c->session('user_id'),
+    personId     => $c->session('person_id'),
     wsURL        => $c->url_for('sync')->to_abs->to_string,
 }};
 
@@ -46,15 +46,15 @@ post '/start' => sub ($c) {
     # Init
     my $session = $c->model->add_session(name => $c->param('name'));
     my $chair   = $session->add_person(
-        name => $c->param('uname') // ('Anonymous' . int(rand 10_000)),
-        star => $c->param('sex') ne 'mail'
+        name => $c->param('pname') // ('Anonymous' . int(rand 10_000)),
+        star => $c->param('sex') ne 'male'
     );
 
     # Store and work with it
     $c->session(
-        token   => $session->token,
-        user_id => $chair->id,
-        role    => 'chair',
+        token       => $session->token,
+        person_id   => $chair->id,
+        role        => 'chair',
     )->redirect_to('host');
 };
 
@@ -83,7 +83,7 @@ post '/join' => sub ($c) {
     push @$persons, $person;
 
     # Store and work with it
-    $c->session({token => $token, user_id => $person->{id}, role => 'user'});
+    $c->session({token => $token, person_id => $person->{id}, role => 'user'});
     $c->redirect_to('attend');
 };
 
@@ -128,7 +128,7 @@ websocket '/sync' => sub ($c) {
 
     # Lookup corresponding data
     my $session = $c->stash('session_data');
-    my $person  = $session->{persons}[$c->session('user_id')];
+    my $person  = $session->{persons}[$c->session('person_id')];
     return $c->reply->not_found unless $person;
 
     # Store connection (data structure is auto-vivified)
@@ -205,7 +205,7 @@ websocket '/sync' => sub ($c) {
 
 # Reset local storage
 get '/reset' => sub ($c) {
-    delete $c->session->{$_} for qw(token user_id role);
+    delete $c->session->{$_} for qw(token person_id role);
     $c->render(text => 'OK');
 };
 
