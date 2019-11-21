@@ -72,6 +72,16 @@ subtest 'Get request persons' => sub {
         => [$person2, $person1], 'Correct person array';
 };
 
+subtest 'Next speaker IDs' => sub {
+    my $session = Redeliste::Data::Session->new(token => 'QUUX');
+    my $person1 = $session->add_person;
+    my $person2 = $session->add_person;
+    is $session->persons->size => 2, 'Got two persons';
+    $session->add_request($person2)->add_request($person1);
+    is_deeply $session->get_next_speaker_ids
+        => [1, 0], 'Correct next speakers';
+};
+
 subtest 'Data export' => sub {
     my $data = Redeliste::Data::Session->new(
         token       => 'XNORFZT',

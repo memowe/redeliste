@@ -27,6 +27,10 @@ sub get_request_persons ($self) {
     return $self->requests->map(sub {$self->persons->[shift]});
 }
 
+sub get_next_speaker_ids ($self) {
+    return $self->requests; # TODO
+}
+
 sub to_hash ($self) {
 
     # Prepare hash
