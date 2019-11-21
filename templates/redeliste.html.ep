@@ -1,6 +1,6 @@
 % layout 'default';
-% title $session_data->{name};
-%= include 'title', subtitle => $session_data->{name}, token => $role eq 'chair'? $session_data->{token} : undef;
+% title $session->{name};
+%= include 'title', subtitle => $session->{name}, token => $role eq 'chair'? $session->{token} : undef;
 
 <main id="redeliste" data-role="<%= $role %>">
     <section v-if="wsConnected">

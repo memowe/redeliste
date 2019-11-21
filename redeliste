@@ -87,7 +87,7 @@ under sub ($c) {
     return $c->reply->not_found unless defined $session;
 
     # Si!
-    $c->stash(session_data => $session);
+    $c->stash(session => $session);
     return 1;
 };
 
@@ -119,7 +119,7 @@ websocket '/sync' => sub ($c) {
     $c->inactivity_timeout(app->config('timeout'));
 
     # Lookup corresponding data
-    my $session = $c->stash('session_data');
+    my $session = $c->stash('session');
     my $person  = $session->{persons}[$c->session('person_id')];
     return $c->reply->not_found unless $person;
 
