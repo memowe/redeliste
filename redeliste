@@ -22,13 +22,6 @@ helper state_dump => sub ($c) {
     wsURL        => $c->url_for('sync')->to_abs->to_string,
 }};
 
-# Add someone to a speaker list
-helper request_to_speak => sub ($c, $id) {
-    return unless $c->stash('session_data')->{list_open};
-    my $rqs = $c->stash('session_data')->{requests};
-    push @$rqs, $id unless grep {$_ == $id} @$rqs;
-};
-
 # Calculate next speakers from the list of requests
 helper next_speakers => sub ($self) {
     return $self->stash('session_data')->{requests}; # TODO
