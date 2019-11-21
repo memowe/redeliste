@@ -1,13 +1,13 @@
-package Redeliste::Store;
+package Redeliste::Model;
 use Mojo::Base -base, -signatures;
 
-use Redeliste::Session;
+use Redeliste::Data::Session;
 
 has sessions => sub { {} };
 
 sub add_session ($self, @args) {
     my $token   = $self->_generate_token;
-    my $session = Redeliste::Session->new(token => $token, @args);
+    my $session = Redeliste::Data::Session->new(token => $token, @args);
     $self->sessions->{$token} = $session;
     return $session;
 }

@@ -6,26 +6,26 @@ use warnings;
 use Test::More;
 use Test::Exception;
 
-use Redeliste::Person;
+use Redeliste::Data::Person;
 use Mojo::Collection 'c';
 
-use_ok 'Redeliste::Session';
+use_ok 'Redeliste::Data::Session';
 
 subtest 'Required attributes' => sub {
-    throws_ok { Redeliste::Session->new->token }
+    throws_ok { Redeliste::Data::Session->new->token }
         qr/^Token attribute required!/, 'Required token exception';
 };
 
 subtest 'Constructor' => sub {
 
     subtest 'Default values' => sub {
-        is Redeliste::Session->new(token => 1)->name => 'Anonymous session',
-            'name';
-        ok Redeliste::Session->new(token => 2)->list_open, 'list_open';
+        is Redeliste::Data::Session->new(token => 1)->name
+            => 'Anonymous session', 'name';
+        ok Redeliste::Data::Session->new(token => 2)->list_open, 'list_open';
     };
 
     subtest 'Complete data' => sub {
-        my $sess = Redeliste::Session->new(
+        my $sess = Redeliste::Data::Session->new(
             token       => 'XNORZT',
             name        => 'Foo session',
             persons     => [42],
@@ -42,7 +42,7 @@ subtest 'Constructor' => sub {
 };
 
 subtest Add => sub {
-    my $session = Redeliste::Session->new(token => 'FOOBAR');
+    my $session = Redeliste::Data::Session->new(token => 'FOOBAR');
 
     subtest Person => sub {
         is $session->persons->size => 0, 'No persons yet';
@@ -62,7 +62,7 @@ subtest Add => sub {
 };
 
 subtest 'Get request persons' => sub {
-    my $session = Redeliste::Session->new(token => 'QUUX');
+    my $session = Redeliste::Data::Session->new(token => 'QUUX');
     my $person1 = $session->add_person;
     my $person2 = $session->add_person;
     is $session->persons->size => 2, 'Got two persons';
@@ -73,10 +73,10 @@ subtest 'Get request persons' => sub {
 };
 
 subtest 'Data export' => sub {
-    my $data = Redeliste::Session->new(
+    my $data = Redeliste::Data::Session->new(
         token       => 'XNORFZT',
         name        => 'Foo session',
-        persons     => c(Redeliste::Person->new(id => 42)),
+        persons     => c(Redeliste::Data::Person->new(id => 42)),
         requests    => [0],
         list_open   => '',
     )->to_hash;

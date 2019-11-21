@@ -6,18 +6,19 @@ use warnings;
 use Test::More;
 use Test::Exception;
 
-use_ok 'Redeliste::Person';
+use_ok 'Redeliste::Data::Person';
 
 subtest 'Required attributes' => sub {
-    throws_ok { Redeliste::Person->new(name => 'Foo')->id }
+    throws_ok { Redeliste::Data::Person->new(name => 'Foo')->id }
         qr/^ID attribute required!/, 'Required id exception';
 };
 
 subtest 'Constructor' => sub {
-    is Redeliste::Person->new(id => 42)->name => 'Anonymous', 'Default name';
+    is Redeliste::Data::Person->new(id => 42)->name
+        => 'Anonymous', 'Default name';
 
     subtest 'Complete data' => sub {
-        my $trish = Redeliste::Person->new(
+        my $trish = Redeliste::Data::Person->new(
             id      => 42,
             name    => 'Trillian',
             active  => 1,
@@ -36,7 +37,7 @@ subtest 'Constructor' => sub {
 };
 
 subtest 'Data export' => sub {
-    my $data = Redeliste::Person->new(
+    my $data = Redeliste::Data::Person->new(
         id      => 42,
         name    => 'Trillian',
         active  => 1,

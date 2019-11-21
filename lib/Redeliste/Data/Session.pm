@@ -1,7 +1,7 @@
-package Redeliste::Session;
+package Redeliste::Data::Session;
 use Mojo::Base -base, -signatures;
 
-use Redeliste::Person;
+use Redeliste::Data::Person;
 use Mojo::Collection;
 use Scalar::Util 'blessed';
 
@@ -13,7 +13,7 @@ has list_open   => 1;
 
 sub add_person ($self, @args) {
     my $id = @{$self->persons};
-    my $person = Redeliste::Person->new(id => $id, @args);
+    my $person = Redeliste::Data::Person->new(id => $id, @args);
     push @{$self->persons}, $person;
     return $person;
 }

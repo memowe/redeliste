@@ -1,4 +1,4 @@
-package Redeliste::Person;
+package Redeliste::Data::Person;
 use Mojo::Base -base, -signatures;
 
 has id      => sub { die "ID attribute required!\n" };
