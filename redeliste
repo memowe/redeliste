@@ -11,11 +11,13 @@ app->secrets([app->config('secret')]);
 # In-memory "database"
 helper model => sub { state $model = Redeliste::Model->new };
 
-# Full state dump for clients
-helper state_dump => sub ($c) {{
-    session      => $c->stash('session_data'),
-    nextSpeakers => $c->next_speakers,
-    listOpen     => $c->stash('session_data')->{list_open} ? true : false,
+# Full state dump for clients (pre-JSON)
+helper state_dump => sub ($c) {
+    my $session = $c->model->sessions->{$c->session('token')};
+    return {
+    session      => $session->to_hash,
+    nextSpeakers => $session->get_next_speaker_ids,
+    listOpen     => $session->list_open ? true : false,
     userId       => $c->session('user_id'),
     wsURL        => $c->url_for('sync')->to_abs->to_string,
 }};
