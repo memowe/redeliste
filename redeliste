@@ -46,7 +46,7 @@ post '/start' => sub ($c) {
     # Prepare data
     my $name    = $c->param('name')  //  'Anonymous session';
     my $uname   = $c->param('uname') // ('Anonymous' . int(rand 10_000));
-    my $star    = $c->param('sex') eq 'male' ? '' : 1;
+    my $star    = ! ($c->param('sex') eq 'male');
 
     # Initiate
     my $token = $c->generate_token;
