@@ -43,30 +43,19 @@ get '/bye';
 # Create a session and generate a token for session members
 post '/start' => sub ($c) {
 
-    # Prepare data
-    my $name    = $c->param('name')  //  'Anonymous session';
-    my $uname   = $c->param('uname') // ('Anonymous' . int(rand 10_000));
-    my $star    = ! ($c->param('sex') eq 'male');
-
-    # Initiate
-    my $token = $c->generate_token;
-    $c->model->{$token} = {
-        name        => $name,
-        persons     => [{
-            id      => 0,
-            name    => $uname,
-            active  => 0,
-            spoken  => 0,
-            star    => $star,
-        }],
-        requests    => [],
-        list_open   => 1,
-        token       => $token,
-    };
+    # Init
+    my $session = $c->model->add_session(name => $c->param('name'));
+    my $chair   = $session->add_person(
+        name => $c->param('uname') // ('Anonymous' . int(rand 10_000)),
+        star => $c->param('sex') ne 'mail'
+    );
 
     # Store and work with it
-    $c->session({token => $token, user_id => 0, role => 'chair'});
-    $c->redirect_to('host');
+    $c->session(
+        token   => $session->token,
+        user_id => $chair->id,
+        role    => 'chair',
+    )->redirect_to('host');
 };
 
 # Join a session
