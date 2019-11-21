@@ -22,11 +22,6 @@ helper state_dump => sub ($c) {
     wsURL        => $c->url_for('sync')->to_abs->to_string,
 }};
 
-# Calculate next speakers from the list of requests
-helper next_speakers => sub ($self) {
-    return $self->stash('session_data')->{requests}; # TODO
-};
-
 # Send state to all clients for the given session
 helper broadcast => sub ($self) {
     my $clients = $self->clients->{$self->session('token')};
