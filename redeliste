@@ -24,14 +24,16 @@ helper state_dump => sub ($c) {
 
 # Send state to all clients for the given session
 helper broadcast => sub ($self) {
-    my $clients = $self->clients->{$self->session('token')};
-    $_->send({json => $self->state_dump}) for grep {defined} @$clients;
+    my $persons = $self->stash('session')->persons;
+    my $conns   = $persons->map('tx')->grep(sub {defined});
+    $conns->each(sub {$_->send({json => $self->state_dump})});
 };
 
 # Close all connections
 helper broadclose => sub ($self) {
-    my $clients = $self->clients->{$self->session('token')};
-    $_->finish for grep {defined} @$clients;
+    my $persons = $self->stash('session')->persons;
+    my $conns   = $persons->map('tx')->grep(sub {defined});
+    $conns->each('finish');
 };
 
 # First steps: static forms only
@@ -122,12 +124,11 @@ websocket '/sync' => sub ($c) {
 
     # Lookup corresponding data
     my $session = $c->stash('session');
-    my $person  = $session->{persons}[$c->session('person_id')];
+    my $person  = $session->persons->[$c->stash('person_id')];
     return $c->reply->not_found unless $person;
 
-    # Store connection (data structure is auto-vivified)
-    $c->clients->{$session->{token}}[$person->{id}] = $c->tx;
-    $person->{active} = 1;
+    # Store connection
+    $person->tx($c->tx)->active(1);
 
     # React on a message
     $c->on(message => sub ($self, $message) {
@@ -187,8 +188,7 @@ websocket '/sync' => sub ($c) {
 
         # User: just let them know
         else {
-            $c->clients->{$session->{token}}[$person->{id}] = undef;
-            $person->{active} = 0;
+            $person->tx(undef)->active(0);
             $c->broadcast;
         }
     });
