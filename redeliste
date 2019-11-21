@@ -2,12 +2,14 @@
 use Mojolicious::Lite -signatures;
 use Mojo::JSON qw(true false);
 
+use Redeliste::Model;
+
 # Load configuration from redeliste.conf
 plugin 'Config';
 app->secrets([app->config('secret')]);
 
 # In-memory "database"
-helper data => sub { state $data = {} };
+helper model => sub { state $model = Redeliste::Model->new };
 
 # Client connections (SESSION_TOKEN => [PERSON_ID => TX])
 helper clients => sub { state $clients = {} };
@@ -20,7 +22,7 @@ helper generate_token => sub ($self) {
     my $token = join '' => map $chars[rand @chars] => 1 .. 5;
 
     # Done, if doesn't exist
-    return $token unless exists $self->data->{$token};
+    return $token unless exists $self->model->{$token};
     return $self->generate_token;
 };
 
@@ -73,7 +75,7 @@ post '/start' => sub ($c) {
 
     # Initiate
     my $token = $c->generate_token;
-    $c->data->{$token} = {
+    $c->model->{$token} = {
         name        => $name,
         persons     => [{
             id      => 0,
@@ -101,7 +103,7 @@ post '/join' => sub ($c) {
 
     # Lookup session
     my $token   = $c->param('token');
-    my $session = $c->data->{$token};
+    my $session = $c->model->{$token};
     return $c->reply->not_found unless defined $session;
 
     # Inject data
@@ -125,7 +127,7 @@ post '/join' => sub ($c) {
 under sub ($c) {
 
     # Session found?
-    my $session = $c->data->{$c->session('token') // ''};
+    my $session = $c->model->{$c->session('token') // ''};
     $c->reply->not_found and return unless defined $session;
 
     # Si!
@@ -206,7 +208,7 @@ websocket '/sync' => sub ($c) {
 
         # Close the whole session
         elsif ($message eq 'CLOSESESSION') {
-            delete $c->data->{$session->{token}};
+            delete $c->model->{$session->{token}};
             $c->broadclose;
         }
 
@@ -221,7 +223,7 @@ websocket '/sync' => sub ($c) {
 
         # Chair: close everything
         if ($c->session('role') eq 'chair') {
-            delete $c->data->{$session->{token}};
+            delete $c->model->{$session->{token}};
             $c->broadclose;
         }
 
