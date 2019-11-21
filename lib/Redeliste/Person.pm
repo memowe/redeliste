@@ -6,6 +6,7 @@ has name    => 'Anonymous';
 has active  => '';
 has spoken  => 0;
 has star    => '';
+has 'tx';
 
 sub to_hash ($self) {
     return { map {$_ => $self->$_} qw(id name active spoken star) };
