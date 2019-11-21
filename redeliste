@@ -13,12 +13,12 @@ helper model => sub { state $model = Redeliste::Model->new };
 
 # Full state dump for clients (pre-JSON)
 helper state_dump => sub ($c) {
-    my $session = $c->model->sessions->{$c->session('token')};
+    my $session = $c->stash('session');
     return {
     session      => $session->to_hash,
     nextSpeakers => $session->get_next_speaker_ids,
     listOpen     => $session->list_open ? true : false,
-    personId     => $c->session('person_id'),
+    personId     => $c->stash('person_id'),
     wsURL        => $c->url_for('sync')->to_abs->to_string,
 }};
 
@@ -87,7 +87,11 @@ under sub ($c) {
     return $c->reply->not_found unless defined $session;
 
     # Si!
-    $c->stash(session => $session);
+    $c->stash(
+        session     => $session,
+        person_id   => $c->session('person_id'),
+        role        => $c->session('role'),
+    );
     return 1;
 };
 
