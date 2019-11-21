@@ -58,6 +58,12 @@ subtest Add => sub {
         $session->add_request($person);
         is $session->requests->size => 1, 'One request';
         is $session->requests->[0] => $person->id, 'Right request';
+
+        subtest Duplicate => sub {
+            $session->add_request($person->id);
+            is $session->requests->size => 1, 'Still one person';
+            is $session->requests->[0] => $person->id, 'Old id';
+        };
     };
 };
 
@@ -66,7 +72,7 @@ subtest 'Get request persons' => sub {
     my $person1 = $session->add_person;
     my $person2 = $session->add_person;
     is $session->persons->size => 2, 'Got two persons';
-    $session->add_request($person2)->add_request($person1);
+    $session->add_request($person2->id)->add_request($person1);
     is_deeply $session->requests->to_array => [1, 0], 'Correct requests';
     is_deeply $session->get_request_persons->to_array
         => [$person2, $person1], 'Correct person array';

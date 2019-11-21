@@ -18,8 +18,10 @@ sub add_person ($self, @args) {
     return $person;
 }
 
-sub add_request ($self, $person) {
-    push @{$self->requests}, $person->id;
+sub add_request ($self, $p) {
+    my $id = ref($p) eq 'Redeliste::Data::Person' ? $p->id : $p;
+    push @{$self->requests}, $id
+        unless grep {$_ == $id} @{$self->requests};
     return $self;
 }
 
