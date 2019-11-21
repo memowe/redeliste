@@ -11,9 +11,6 @@ app->secrets([app->config('secret')]);
 # In-memory "database"
 helper model => sub { state $model = Redeliste::Model->new };
 
-# Client connections (SESSION_TOKEN => [PERSON_ID => TX])
-helper clients => sub { state $clients = {} };
-
 # Token generator helper
 helper generate_token => sub ($self) {
 
