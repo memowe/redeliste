@@ -59,42 +59,20 @@ sub startup ($self) {
     $r->post('/join')->to('entrance#join_session');
 
     # A session has been joined, retrieve its data
-    my $s = $r->under(sub ($c) {
-
-        # Session found?
-        my $session = $c->model->sessions->{$c->session('token')};
-        return $c->reply->not_found unless defined $session;
-
-        # Si!
-        $c->stash(
-            session     => $session,
-            person_id   => $c->session('person_id'),
-            role        => $c->session('role'),
-        );
-        return 1;
-    });
+    my $session = $r->under('/')->to('session#test_logged_in');
 
     # Host a session
-    $s->get('/host' => sub ($c) {
-        return $c->reply->not_found unless $c->session('role') eq 'chair';
-        $c->render(template => 'redeliste', role => 'chair');
-    });
+    $session->get('/host')->to('session#host');
 
     # Attend a session
-    $s->get('/attend' => sub ($c) {
-        $c->render(template => 'redeliste', role => 'user');
-    });
+    $session->get('/attend')->to('session#attend');
 
-    # Read state data dump as JSON/text
-    $s->get('/data' => [format => 'json'] => sub ($c) {
-        $c->render(json => $c->state_dump);
-    });
-    $s->get('/data' => [format => 'txt'] => sub ($c) {
-        $c->render(text => $c->dumper($c->state_dump));
-    });
+    # Read state data dump
+    $session->get('/data' => [format => 'json'])->to('session#data_json');
+    $session->get('/data' => [format => 'txt' ])->to('session#data_text');
 
     # Push synchronization
-    $s->websocket('/sync' => sub ($c) {
+    $session->websocket('/sync' => sub ($c) {
 
         # Keep connection alive for at least one day
         $c->inactivity_timeout($self->config('timeout'));
@@ -149,7 +127,7 @@ sub startup ($self) {
     });
 
     # Reset local storage
-    $s->get('/reset' => sub ($c) {
+    $session->get('/reset' => sub ($c) {
         $c->session({})->render(text => 'OK');
     });
 }
