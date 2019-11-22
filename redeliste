@@ -1,14 +1,3 @@
-# Host a session
-get '/host' => sub ($c) {
-    return $c->reply->not_found unless $c->session('role') eq 'chair';
-    $c->render(template => 'redeliste', role => 'chair');
-};
-
-# Attend a session
-get '/attend' => sub ($c) {
-    $c->render(template => 'redeliste', role => 'user');
-};
-
 # Read state data dump as JSON/text
 get '/data' => [format => 'json'] => sub ($c) {
     $c->render(json => $c->state_dump);

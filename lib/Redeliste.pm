@@ -106,6 +106,17 @@ sub startup ($self) {
         );
         return 1;
     });
+
+    # Host a session
+    $s->get('/host' => sub ($c) {
+        return $c->reply->not_found unless $c->session('role') eq 'chair';
+        $c->render(template => 'redeliste', role => 'chair');
+    });
+
+    # Attend a session
+    $s->get('/attend' => sub ($c) {
+        $c->render(template => 'redeliste', role => 'user');
+    });
 }
 
 1;
