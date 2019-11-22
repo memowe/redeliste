@@ -12,6 +12,7 @@
             <p>Danke für nichts.</p>
             <p class="start-button">
                 %= link_to choose => (class => 'button button-primary') => begin
+                    <i class="fas fa-home"></i>
                     Start
                 % end
         </div>

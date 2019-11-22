@@ -27,7 +27,10 @@
         </div>
         <div class="four columns join-button">
             <br>
-            %= submit_button 'Betreten', class => 'button button-primary'
+            <button type="submit" class="button-primary">
+                <i class="fas fa-sign-in-alt"></i>
+                Betreten
+            <button>
         </div>
         <div class="two columns"></div>
     </div>

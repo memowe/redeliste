@@ -6,7 +6,7 @@
         <div class="one column"></div>
         <div class="five columns">
             %= link_to join => (class => 'button button-primary u-full-width') => begin
-                <i class="fas fa-folder-open"></i>
+                <i class="fas fa-sign-in-alt"></i>
                 Sitzung betreten
             % end
         </div>
