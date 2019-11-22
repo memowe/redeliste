@@ -102,7 +102,7 @@
                     <i class="fas fa-times"></i>
                     Beenden
                 </button>
-                <button v-else v-on:click="disconnect">
+                <button v-else v-on:click="disconnect('Sitzung wirklich verlassen?')">
                     <i class="fas fa-sign-out-alt"></i>
                     Beenden
                 </button>

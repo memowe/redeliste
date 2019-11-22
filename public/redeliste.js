@@ -41,11 +41,13 @@ new Vue({
                 window.location.replace('/bye');
             };
         },
-        disconnect() {
-            this.socket.close();
-            this.wsConnected = false;
-            this.session     = null;
-            window.location.replace('/bye');
+        disconnect(confirmText) {
+            if (confirm(confirmText)) {
+                this.socket.close();
+                this.wsConnected = false;
+                this.session     = null;
+                window.location.replace('/bye');
+            }
         },
         requestSpeak() {
             this.socket.send('RQSP');
