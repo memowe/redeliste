@@ -36,6 +36,13 @@ subtest 'Constructor' => sub {
     };
 };
 
+subtest 'Spoken count' => sub {
+    my $trish = Redeliste::Data::Person->new(id => 17);
+    is $trish->spoken => 0, 'Never spoken';
+    is $trish->spoke => $trish, 'Correct method chaining';
+    is $trish->spoken => 1, 'Spoke once';
+};
+
 subtest 'Data export' => sub {
     my $data = Redeliste::Data::Person->new(
         id      => 42,

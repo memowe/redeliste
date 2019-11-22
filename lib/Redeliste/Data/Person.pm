@@ -8,6 +8,11 @@ has spoken  => 0;
 has star    => '';
 has 'tx';
 
+sub spoke ($self) {
+    $self->spoken($self->spoken + 1);
+    return $self;
+}
+
 sub to_hash ($self) {
     return { map {$_ => $self->$_} qw(id name active spoken star) };
 }
