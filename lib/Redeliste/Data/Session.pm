@@ -2,13 +2,13 @@ package Redeliste::Data::Session;
 use Mojo::Base -base, -signatures;
 
 use Redeliste::Data::Person;
-use Mojo::Collection;
+use Mojo::Collection 'c';
 use Scalar::Util 'blessed';
 
 has token       => sub { die "Token attribute required!\n" };
 has name        => 'Anonymous session';
-has persons     => sub { Mojo::Collection->new };
-has requests    => sub { Mojo::Collection->new };
+has persons     => sub { c };
+has requests    => sub { c };
 has list_open   => 1;
 
 sub add_person ($self, @args) {
@@ -39,6 +39,10 @@ sub call_next_speaker ($self) {
     my $next = $self->persons->[$npid]->spoke;
     $self->requests($reqs);
     return $next;
+}
+
+sub next_item ($self) {
+    return $self->requests(c)->list_open(1);
 }
 
 sub to_hash ($self) {

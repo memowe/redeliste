@@ -102,6 +102,15 @@ subtest 'Next speakers' => sub {
     };
 };
 
+subtest 'Next agenda item' => sub {
+    my $session = Redeliste::Data::Session->new(token => 'PH00RT5');
+    my $person  = $session->add_person;
+    $session->list_open('')->next_item;
+
+    is $session->requests->size => 0, 'No requests';
+    ok $session->list_open, 'List is open';
+};
+
 subtest 'Data export' => sub {
     my $data = Redeliste::Data::Session->new(
         token       => 'XNORFZT',
