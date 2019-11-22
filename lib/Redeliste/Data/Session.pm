@@ -33,10 +33,10 @@ sub get_next_speaker_ids ($self) {
     return $self->requests; # TODO
 }
 
-sub call_next_speaker ($self) {
-    my $npid = $self->get_next_speaker_ids->[0];
-    my $reqs = $self->requests->grep(sub {$_ != $npid});
-    my $next = $self->persons->[$npid]->spoke;
+sub call_next_speaker ($self, $=) {
+    my $id   =  $_[1] // $self->get_next_speaker_ids->[0];
+    my $reqs = $self->requests->grep(sub {$_ != $id});
+    my $next = $self->persons->[$id]->spoke;
     $self->requests($reqs);
     return $next;
 }

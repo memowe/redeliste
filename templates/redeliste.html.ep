@@ -42,12 +42,16 @@
                         <th>Name</th>
                         <th>w/*</th>
                         <th>Geredet</th>
+                        <th>Aktion</th>
                     </thead>
                     <tbody>
                         <tr v-for="s in nextSpeakers" v-bind:class="{inactive: ! s.active}">
                             <td>{{ s.name }}</td>
                             <td>{{ s.star ? 'Ja' : 'Nein' }}</td>
                             <td>{{ s.spoken }}</td>
+                            <td>
+                                <button v-if="role == 'chair' && s.id != nextSpeakerIds[0]" v-on:click="overrideSpeaker(s.id)"><i class="fas fa-bolt"></i></button>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
