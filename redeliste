@@ -134,47 +134,21 @@ websocket '/sync' => sub ($c) {
     # React on a message
     $c->on(message => sub ($self, $message) {
 
-        # Request to speak
-        if ($message eq 'RQSP') {
-            $c->request_to_speak($person->{id});
-            $c->broadcast;
-        }
-
-        # Next speaker
-        elsif ($message eq 'NEXT') {
-            my $id = shift @{$session->{requests}};
-            $session->{persons}[$id]->{spoken}++;
-            $c->broadcast;
-        }
-
-        # Close speakers list
-        elsif ($message eq 'CLOSELIST') {
-            $session->{list_open} = 0;
-            $c->broadcast;
-        }
-
-        # (Re-) Open speakers list
-        elsif ($message eq 'OPENLIST') {
-            $session->{list_open} = 1;
-            $c->broadcast;
-        }
-
-        # Next agenda item
-        elsif ($message eq 'NEXTITEM') {
-            $session->{requests} = [];
-            $session->{list_open} = 1;
-            $c->broadcast;
-        }
-
         # Close the whole session
-        elsif ($message eq 'CLOSESESSION') {
-            delete $c->model->{$session->{token}};
+        if ($message eq 'CLOSESESSION') {
+            delete $c->model->sessions->{$session->{token}};
             $c->broadclose;
+            return;
         }
 
-        # Oops?
-        else {
-            $c->app->log->error("Unknown message $message!");
+        # Dispatch messages
+        for ($message) {
+            /^RQSP$/        && $session->add_request($person);
+            /^NEXT$/        && $session->call_next_speaker;
+            /^CLOSELIST$/   && $session->list_open('');
+            /^OPENLIST$/    && $session->list_open(1);
+            /^NEXTITEM$/    && $session->next_item;
+            $c->broadcast;
         }
     });
 
@@ -182,8 +156,8 @@ websocket '/sync' => sub ($c) {
     $c->on(finish => sub {
 
         # Chair: close everything
-        if ($c->session('role') eq 'chair') {
-            delete $c->model->{$session->{token}};
+        if ($c->stash('role') eq 'chair') {
+            delete $c->model->sessions->{$session->{token}};
             $c->broadclose;
         }
 
