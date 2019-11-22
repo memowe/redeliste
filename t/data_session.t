@@ -93,7 +93,6 @@ subtest 'Next speakers' => sub {
 
     subtest Call => sub {
         my $next_id = $session->get_next_speaker_ids->[0];
-        my $next    = $session->persons->[$next_id];
         my $called  = $session->call_next_speaker;
         my $nn_id   = $session->get_next_speaker_ids->[0];
         is $session->requests->size => 1, 'One speaker called';
