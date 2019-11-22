@@ -80,14 +80,15 @@ subtest 'Get request persons' => sub {
 
 subtest 'Next speakers' => sub {
     my $session = Redeliste::Data::Session->new(token => 'QUUX');
-    my $person1 = $session->add_person;
-    my $person2 = $session->add_person;
-    is $session->persons->size => 2, 'Got two persons';
-    is $_->spoken => 0, 'Never spoke' for $person1, $person2;
+    my $p1 = $session->add_person;
+    my $p2 = $session->add_person;
+    my $p3 = $session->add_person;
+    is $session->persons->size => 3, 'Got two persons';
+    is $_->spoken => 0, 'Never spoke' for $p1, $p2, $p3;
 
     subtest 'Get next IDs' => sub {
-        $session->add_request($person2)->add_request($person1);
-        is_deeply $session->get_next_speaker_ids => [1, 0],
+        $session->add_request($p2)->add_request($p3)->add_request($p1);
+        is_deeply $session->get_next_speaker_ids => [1, 2, 0],
             'Correct next speakers';
     };
 
@@ -95,6 +96,16 @@ subtest 'Next speakers' => sub {
         my $next_id = $session->get_next_speaker_ids->[0];
         my $called  = $session->call_next_speaker;
         my $nn_id   = $session->get_next_speaker_ids->[0];
+        is $session->requests->size => 2, 'One speaker called';
+        ok $called != $session->persons->[$nn_id], 'Correct speaker removed';
+        is $called->spoken => 1, 'Spoke';
+    };
+
+    subtest Override => sub {
+        my $next_id = $session->requests->[1];
+        my $called  = $session->call_next_speaker($next_id);
+        my $nn_id   = $session->get_next_speaker_ids->[0];
+        is $called->id => $next_id, 'Got the right speaker';
         is $session->requests->size => 1, 'One speaker called';
         ok $called != $session->persons->[$nn_id], 'Correct speaker removed';
         is $called->spoken => 1, 'Spoke';
