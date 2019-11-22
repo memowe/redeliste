@@ -1,11 +1,3 @@
-# Read state data dump as JSON/text
-get '/data' => [format => 'json'] => sub ($c) {
-    $c->render(json => $c->state_dump);
-};
-get '/data' => [format => 'txt'] => sub ($c) {
-	$c->render(text => $c->dumper($c->state_dump));
-};
-
 # Push synchronization
 websocket '/sync' => sub ($c) {
 

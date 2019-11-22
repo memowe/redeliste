@@ -117,6 +117,14 @@ sub startup ($self) {
     $s->get('/attend' => sub ($c) {
         $c->render(template => 'redeliste', role => 'user');
     });
+
+    # Read state data dump as JSON/text
+    $s->get('/data' => [format => 'json'] => sub ($c) {
+        $c->render(json => $c->state_dump);
+    });
+    $s->get('/data' => [format => 'txt'] => sub ($c) {
+        $c->render(text => $c->dumper($c->state_dump));
+    });
 }
 
 1;
