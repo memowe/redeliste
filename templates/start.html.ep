@@ -7,11 +7,11 @@
         <div class="two columns"></div>
         <div class="four columns">
             %= label_for 'name' => 'Name der Sitzung:'
-            %= text_field name => '', id => 'name', class => 'u-full-width'
+            %= text_field name => '', (id => 'name', class => 'u-full-width', 'v-model' => 'name')
         </div>
         <div class="four columns">
             %= label_for 'pname' => 'Dein Name:'
-            %= text_field pname => '', id => 'pname', class => 'u-full-width'
+            %= text_field pname => '', (id => 'pname', class => 'u-full-width', 'v-model' => 'pname')
         </div>
         <div class="two columns"></div>
     </div>
@@ -27,7 +27,7 @@
         </div>
         <div class="four columns create-button">
             <br>
-            <button type="submit" class="button-primary">
+            <button type="submit" class="button-primary" v-bind:disabled="empty">
                 <i class="fas fa-folder-plus"></i>
                 Erstellen
             </button>
@@ -36,3 +36,6 @@
     </div>
     % end
 </section>
+
+%= javascript 'https://cdn.jsdelivr.net/npm/vue/dist/vue.js'
+%= javascript '/start.js'
