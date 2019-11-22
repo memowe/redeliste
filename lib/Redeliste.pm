@@ -44,6 +44,13 @@ sub startup ($self) {
 
 	# Load config and add helpers
 	$self->init;
+
+	# Prepare routes
+	my $r = $self->routes;
+
+	# Static pages
+	$r->get('/')->name('choose');
+	$r->get("/$_") for qw(start join bye);
 }
 
 1;

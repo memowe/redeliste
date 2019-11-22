@@ -1,9 +1,3 @@
-# First steps: static forms only
-get '/' => 'choose';
-get '/start';
-get '/join';
-get '/bye';
-
 # Create a session and generate a token for session members
 post '/start' => sub ($c) {
 
