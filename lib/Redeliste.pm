@@ -4,7 +4,7 @@ use Mojo::Base 'Mojolicious', -signatures;
 use Redeliste::Model;
 use Mojo::JSON qw(true false);
 
-sub startup ($self) {
+sub init ($self) {
 
     # Load configuration from redeliste.conf
     $self->plugin('Config');
@@ -38,6 +38,12 @@ sub startup ($self) {
         my $conns   = $persons->map('tx')->grep(sub {defined});
         $conns->each('finish');
     });
+}
+
+sub startup ($self) {
+
+	# Load config and add helpers
+	$self->init;
 }
 
 1;
