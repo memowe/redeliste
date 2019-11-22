@@ -78,14 +78,26 @@ subtest 'Get request persons' => sub {
         => [$person2, $person1], 'Correct person array';
 };
 
-subtest 'Next speaker IDs' => sub {
+subtest 'Next speakers' => sub {
     my $session = Redeliste::Data::Session->new(token => 'QUUX');
     my $person1 = $session->add_person;
     my $person2 = $session->add_person;
     is $session->persons->size => 2, 'Got two persons';
-    $session->add_request($person2)->add_request($person1);
-    is_deeply $session->get_next_speaker_ids
-        => [1, 0], 'Correct next speakers';
+
+    subtest 'Get next IDs' => sub {
+        $session->add_request($person2)->add_request($person1);
+        is_deeply $session->get_next_speaker_ids => [1, 0],
+            'Correct next speakers';
+    };
+
+    subtest Call => sub {
+        my $next_id = $session->get_next_speaker_ids->[0];
+        my $next    = $session->persons->[$next_id];
+        my $called  = $session->call_next_speaker;
+        my $nn_id   = $session->get_next_speaker_ids->[0];
+        is $session->requests->size => 1, 'One speaker called';
+        ok $called != $session->persons->[$nn_id], 'Correct speaker removed';
+    };
 };
 
 subtest 'Data export' => sub {

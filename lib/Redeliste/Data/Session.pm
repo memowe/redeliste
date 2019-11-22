@@ -33,6 +33,12 @@ sub get_next_speaker_ids ($self) {
     return $self->requests; # TODO
 }
 
+sub call_next_speaker ($self) {
+    my $npid = $self->get_next_speaker_ids->[0];
+    my $reqs = $self->requests->grep(sub {$_ != $npid});
+    return $self->requests($reqs)->persons->[$npid];
+}
+
 sub to_hash ($self) {
 
     # Prepare hash
