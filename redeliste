@@ -137,5 +137,3 @@ websocket '/sync' => sub ($c) {
 get '/reset' => sub ($c) {
     $c->session({})->render(text => 'OK');
 };
-
-app->start;
