@@ -53,6 +53,9 @@ new Vue({
         callSpeaker() {
             this.socket.send('NEXT');
         },
+        overrideSpeaker(id) {
+            this.socket.send('NEXT ' + id);
+        },
         closeList() {
             this.socket.send('CLOSELIST');
         },
