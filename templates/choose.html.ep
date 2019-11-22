@@ -6,11 +6,13 @@
         <div class="one column"></div>
         <div class="five columns">
             %= link_to join => (class => 'button button-primary u-full-width') => begin
+                <i class="fas fa-folder-open"></i>
                 Sitzung betreten
             % end
         </div>
         <div class="five columns">
             %= link_to start => (class => 'button button-primary u-full-width') => begin
+                <i class="fas fa-folder-plus"></i>
                 Sitzung erstellen
             % end
         </div>

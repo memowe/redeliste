@@ -27,7 +27,10 @@
         </div>
         <div class="four columns create-button">
             <br>
-            %= submit_button 'Erstellen', class => 'button button-primary'
+            <button type="submit" class="button-primary">
+                <i class="fas fa-folder-plus"></i>
+                Erstellen
+            </button>
         </div>
         <div class="two columns"></div>
     </div>
