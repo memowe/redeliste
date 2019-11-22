@@ -180,6 +180,11 @@ sub startup ($self) {
         # Send updated session data to all clients
         $c->broadcast;
     });
+
+    # Reset local storage
+    $s->get('/reset' => sub ($c) {
+        $c->session({})->render(text => 'OK');
+    });
 }
 
 1;

@@ -1,4 +1,0 @@
-# Reset local storage
-get '/reset' => sub ($c) {
-    $c->session({})->render(text => 'OK');
-};
