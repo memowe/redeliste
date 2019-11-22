@@ -174,8 +174,7 @@ websocket '/sync' => sub ($c) {
 
 # Reset local storage
 get '/reset' => sub ($c) {
-    delete $c->session->{$_} for qw(token person_id role);
-    $c->render(text => 'OK');
+    $c->session({})->render(text => 'OK');
 };
 
 app->start;
