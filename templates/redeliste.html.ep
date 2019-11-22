@@ -7,10 +7,15 @@
 
         <div v-if="role == 'user'" class="row request-button">
             <div class="three columns"></div>
-            <div class="six columns">
+            <div v-bind:class="{columns: 1, four: isOnSpeakersList, six: ! isOnSpeakersList}">
                 <button v-bind:disabled="isOnSpeakersList || ! listOpen" v-on:click="requestSpeak" class="u-full-width button-primary">
                     <i class="fas fa-hand-pointer"></i>
                     Melden
+                </button>
+            </div>
+            <div class="two columns" v-if="isOnSpeakersList">
+                <button v-on:click="revoke">
+                    <i class="fas fa-ban"></i>
                 </button>
             </div>
             <div class="three column"></div>
@@ -42,10 +47,13 @@
             </div>
             <div class="two columns">
             </div>
-            <div class="two columns">
-                <button v-bind:disabled="isOnSpeakersList || ! listOpen" v-on:click="requestSpeak" class="u-full-width button-primary">
+            <div class="two columns chair-request-button">
+                <button v-if="! isOnSpeakersList && listOpen" v-on:click="requestSpeak" class="u-full-width button-primary">
                     <i class="fas fa-hand-pointer"></i>
                     Melden
+                </button>
+                <button v-else v-on:click="revoke">
+                    <i class="fas fa-ban"></i>
                 </button>
             </div>
             <div class="one column"></div>

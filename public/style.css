@@ -92,6 +92,10 @@ button.button-primary:hover {
     margin: 1em 0;
 }
 
+#redeliste .chair-request-button {
+    text-align: right;
+}
+
 #redeliste table {
     margin-bottom: .5em;
 }
