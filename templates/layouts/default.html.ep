@@ -3,10 +3,10 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/normalize.css/normalize.css">
-        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/skeleton-framework/skeleton-framework/dist/skeleton.css">
-        <link rel="stylesheet" type="text/css" href="/style.css">
-        <script src="https://kit.fontawesome.com/02991c9553.js"></script>
+        %= stylesheet 'https://cdn.jsdelivr.net/npm/normalize.css/normalize.css'
+        %= stylesheet 'https://cdn.jsdelivr.net/gh/skeleton-framework/skeleton-framework/dist/skeleton.css'
+        %= stylesheet '/style.css'
+        %= javascript 'https://kit.fontawesome.com/02991c9553.js'
         <title><%= title %></title>
     </head>
     <body>
