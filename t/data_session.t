@@ -83,6 +83,7 @@ subtest 'Next speakers' => sub {
     my $person1 = $session->add_person;
     my $person2 = $session->add_person;
     is $session->persons->size => 2, 'Got two persons';
+    is $_->spoken => 0, 'Never spoke' for $person1, $person2;
 
     subtest 'Get next IDs' => sub {
         $session->add_request($person2)->add_request($person1);
@@ -97,6 +98,7 @@ subtest 'Next speakers' => sub {
         my $nn_id   = $session->get_next_speaker_ids->[0];
         is $session->requests->size => 1, 'One speaker called';
         ok $called != $session->persons->[$nn_id], 'Correct speaker removed';
+        is $called->spoken => 1, 'Spoke';
     };
 };
 
