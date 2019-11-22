@@ -53,43 +53,10 @@ sub startup ($self) {
 	$r->get("/$_") for qw(start join bye);
 
     # Create a session and generate a token for session members
-    $r->post('/start' => sub ($c) {
-
-        # Init
-        my $session = $c->model->add_session(name => $c->param('name'));
-        my $chair   = $session->add_person(
-            name => $c->param('pname') // ('Anonymous' . int(rand 10_000)),
-            star => $c->param('sex') ne 'male'
-        );
-
-        # Store and work with it
-        $c->session(
-            token       => $session->token,
-            person_id   => $chair->id,
-            role        => 'chair',
-        )->redirect_to('host');
-    });
+    $r->post('/start')->to('entrance#start_session');
 
     # Join a session
-    $r->post('/join' => sub ($c) {
-
-        # Lookup session
-        my $session = $c->model->sessions->{$c->param('token')};
-        return $c->reply->not_found unless defined $session;
-
-        # Inject data
-        my $person = $session->add_person(
-            name => $c->param('name') // ('Anonymous' . int(rand 10_000)),
-            star => $c->param('sex') ne 'male',
-        );
-
-        # Store and work with it
-        $c->session(
-            token       => $session->token,
-            person_id   => $person->id,
-            role        => 'user'
-        )->redirect_to('attend');
-    });
+    $r->post('/join')->to('entrance#join_session');
 
     # A session has been joined, retrieve its data
     my $s = $r->under(sub ($c) {
