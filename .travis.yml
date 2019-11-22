@@ -1,0 +1,11 @@
+language: perl
+
+perl:
+    - "5.30"
+
+notifications:
+    recipients:
+        - mirko@westermeier.de
+    email:
+        on_success: always
+        on_failure: always

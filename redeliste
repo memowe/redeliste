@@ -2,59 +2,39 @@
 use Mojolicious::Lite -signatures;
 use Mojo::JSON qw(true false);
 
+use lib app->home->rel_file('lib')->to_string;
+use Redeliste::Model;
+
 # Load configuration from redeliste.conf
 plugin 'Config';
 app->secrets([app->config('secret')]);
 
 # In-memory "database"
-helper data => sub { state $data = app->config('init_sessions') // {} };
+helper model => sub { state $model = Redeliste::Model->new };
 
-# Client connections (SESSION_TOKEN => [PERSON_ID => TX])
-helper clients => sub { state $clients = {} };
-
-# Token generator helper
-helper generate_token => sub ($self) {
-
-    # Generate token with 5 characters
-    my @chars = ('A'..'Z', 1 .. 9);
-    my $token = join '' => map $chars[rand @chars] => 1 .. 5;
-
-    # Done, if doesn't exist
-    return $token unless exists $self->data->{$token};
-    return $self->generate_token;
-};
-
-# Full state dump for clients
-helper state_dump => sub ($c) {{
-    session      => $c->stash('session_data'),
-    nextSpeakers => $c->next_speakers,
-    listOpen     => $c->stash('session_data')->{list_open} ? true : false,
-    userId       => $c->session('user_id'),
+# Full state dump for clients (pre-JSON)
+helper state_dump => sub ($c) {
+    my $session = $c->stash('session');
+    return {
+    session      => $session->to_hash,
+    nextSpeakers => $session->get_next_speaker_ids,
+    listOpen     => $session->list_open ? true : false,
+    personId     => $c->stash('person_id'),
     wsURL        => $c->url_for('sync')->to_abs->to_string,
 }};
 
-# Add someone to a speaker list
-helper request_to_speak => sub ($c, $id) {
-    return unless $c->stash('session_data')->{list_open};
-    my $rqs = $c->stash('session_data')->{requests};
-    push @$rqs, $id unless grep {$_ == $id} @$rqs;
-};
-
-# Calculate next speakers from the list of requests
-helper next_speakers => sub ($self) {
-    return $self->stash('session_data')->{requests}; # TODO
-};
-
 # Send state to all clients for the given session
 helper broadcast => sub ($self) {
-    my $clients = $self->clients->{$self->session('token')};
-    $_->send({json => $self->state_dump}) for grep {defined} @$clients;
+    my $persons = $self->stash('session')->persons;
+    my $conns   = $persons->map('tx')->grep(sub {defined});
+    $conns->each(sub {$_->send({json => $self->state_dump})});
 };
 
 # Close all connections
 helper broadclose => sub ($self) {
-    my $clients = $self->clients->{$self->session('token')};
-    $_->finish for grep {defined} @$clients;
+    my $persons = $self->stash('session')->persons;
+    my $conns   = $persons->map('tx')->grep(sub {defined});
+    $conns->each('finish');
 };
 
 # First steps: static forms only
@@ -66,70 +46,55 @@ get '/bye';
 # Create a session and generate a token for session members
 post '/start' => sub ($c) {
 
-    # Prepare data
-    my $name    = $c->param('name')  //  'Anonymous session';
-    my $uname   = $c->param('uname') // ('Anonymous' . int(rand 10_000));
-    my $star    = $c->param('sex') eq 'male' ? '' : 1;
-
-    # Initiate
-    my $token = $c->generate_token;
-    $c->data->{$token} = {
-        name        => $name,
-        persons     => [{
-            id      => 0,
-            name    => $uname,
-            active  => 0,
-            spoken  => 0,
-            star    => $star,
-        }],
-        requests    => [],
-        list_open   => 1,
-        token       => $token,
-    };
+    # Init
+    my $session = $c->model->add_session(name => $c->param('name'));
+    my $chair   = $session->add_person(
+        name => $c->param('pname') // ('Anonymous' . int(rand 10_000)),
+        star => $c->param('sex') ne 'male'
+    );
 
     # Store and work with it
-    $c->session({token => $token, user_id => 0, role => 'chair'});
-    $c->redirect_to('host');
+    $c->session(
+        token       => $session->token,
+        person_id   => $chair->id,
+        role        => 'chair',
+    )->redirect_to('host');
 };
 
 # Join a session
 post '/join' => sub ($c) {
 
-    # Prepare data
-    my $name = $c->param('name') // ('Anonymous' . int(rand 10_000));
-    my $star = $c->param('sex') eq 'male' ? '' : 1;
-
     # Lookup session
-    my $token   = $c->param('token');
-    my $session = $c->data->{$token};
+    my $session = $c->model->sessions->{$c->param('token')};
     return $c->reply->not_found unless defined $session;
 
     # Inject data
-    my $persons = $session->{persons};
-    my $plen    = scalar @$persons;
-    my $person  = {
-        id      => $plen,
-        name    => $name,
-        active  => 0,
-        spoken  => 0,
-        star    => $star,
-    };
-    push @$persons, $person;
+    my $person = $session->add_person(
+        name => $c->param('name') // ('Anonymous' . int(rand 10_000)),
+        star => $c->param('sex') ne 'male',
+    );
 
     # Store and work with it
-    $c->session({token => $token, user_id => $person->{id}, role => 'user'});
-    $c->redirect_to('attend');
+    $c->session(
+        token       => $session->token,
+        person_id   => $person->id,
+        role        => 'user'
+    )->redirect_to('attend');
 };
 
 # A session has been joined, retrieve its data
 under sub ($c) {
 
     # Session found?
-    my $session = $c->data->{$c->session('token') // ''};
-    $c->reply->not_found and return unless defined $session;
+    my $session = $c->model->sessions->{$c->session('token')};
+    return $c->reply->not_found unless defined $session;
 
     # Si!
-    $c->stash(session_data => $session);
+    $c->stash(
+        session     => $session,
+        person_id   => $c->session('person_id'),
+        role        => $c->session('role'),
+    );
     return 1;
 };
 
@@ -144,12 +109,10 @@ get '/attend' => sub ($c) {
     $c->render(template => 'redeliste', role => 'user');
 };
 
-# Read state data dump as JSON
+# Read state data dump as JSON/text
 get '/data' => [format => 'json'] => sub ($c) {
     $c->render(json => $c->state_dump);
 };
-
-# Read state data dump as text
 get '/data' => [format => 'txt'] => sub ($c) {
 	$c->render(text => $c->dumper($c->state_dump));
 };
@@ -161,58 +124,31 @@ websocket '/sync' => sub ($c) {
     $c->inactivity_timeout(app->config('timeout'));
 
     # Lookup corresponding data
-    my $session = $c->stash('session_data');
-    my $person  = $session->{persons}[$c->session('user_id')];
+    my $session = $c->stash('session');
+    my $person  = $session->persons->[$c->stash('person_id')];
     return $c->reply->not_found unless $person;
 
-    # Store connection (data structure is auto-vivified)
-    $c->clients->{$session->{token}}[$person->{id}] = $c->tx;
-    $person->{active} = 1;
+    # Store connection
+    $person->tx($c->tx)->active(1);
 
     # React on a message
     $c->on(message => sub ($self, $message) {
 
-        # Request to speak
-        if ($message eq 'RQSP') {
-            $c->request_to_speak($person->{id});
-            $c->broadcast;
-        }
-
-        # Next speaker
-        elsif ($message eq 'NEXT') {
-            my $id = shift @{$session->{requests}};
-            $session->{persons}[$id]->{spoken}++;
-            $c->broadcast;
-        }
-
-        # Close speakers list
-        elsif ($message eq 'CLOSELIST') {
-            $session->{list_open} = 0;
-            $c->broadcast;
-        }
-
-        # (Re-) Open speakers list
-        elsif ($message eq 'OPENLIST') {
-            $session->{list_open} = 1;
-            $c->broadcast;
-        }
-
-        # Next agenda item
-        elsif ($message eq 'NEXTITEM') {
-            $session->{requests} = [];
-            $session->{list_open} = 1;
-            $c->broadcast;
-        }
-
         # Close the whole session
-        elsif ($message eq 'CLOSESESSION') {
-            delete $c->data->{$session->{token}};
+        if ($message eq 'CLOSESESSION') {
+            delete $c->model->sessions->{$session->{token}};
             $c->broadclose;
+            return;
         }
 
-        # Oops?
-        else {
-            $c->app->log->error("Unknown message $message!");
+        # Dispatch messages
+        for ($message) {
+            /^RQSP$/        && $session->add_request($person);
+            /^NEXT$/        && $session->call_next_speaker;
+            /^CLOSELIST$/   && $session->list_open('');
+            /^OPENLIST$/    && $session->list_open(1);
+            /^NEXTITEM$/    && $session->next_item;
+            $c->broadcast;
         }
     });
 
@@ -220,15 +156,14 @@ websocket '/sync' => sub ($c) {
     $c->on(finish => sub {
 
         # Chair: close everything
-        if ($c->session('role') eq 'chair') {
-            delete $c->data->{$session->{token}};
+        if ($c->stash('role') eq 'chair') {
+            delete $c->model->sessions->{$session->{token}};
             $c->broadclose;
         }
 
         # User: just let them know
         else {
-            $c->clients->{$session->{token}}[$person->{id}] = undef;
-            $person->{active} = 0;
+            $person->tx(undef)->active(0);
             $c->broadcast;
         }
     });
@@ -239,8 +174,7 @@ websocket '/sync' => sub ($c) {
 
 # Reset local storage
 get '/reset' => sub ($c) {
-    delete $c->session->{$_} for qw(token user_id role);
-    $c->render(text => 'OK');
+    $c->session({})->render(text => 'OK');
 };
 
 app->start;

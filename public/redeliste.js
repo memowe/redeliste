@@ -5,7 +5,7 @@ new Vue({
         session: null,
         nextSpeakerIds: [],
         listOpen: false,
-        userId: null,
+        personId: null,
         wsConnected: false,
         wsURL: null,
     }},
@@ -21,7 +21,7 @@ new Vue({
             return this.nextSpeakerIds.map(id => this.session.persons[id]);
         },
         isOnSpeakersList() {
-            return this.nextSpeakerIds.includes(this.userId);
+            return this.nextSpeakerIds.includes(this.personId);
         },
     },
     methods: {
@@ -75,9 +75,9 @@ new Vue({
     },
     mounted() {
         axios.get('/data.json').then(res => {
-            this.session = res.data.session;
-            this.userId  = res.data.userId;
-            this.wsURL   = res.data.wsURL;
+            this.session    = res.data.session;
+            this.personId   = res.data.personId;
+            this.wsURL      = res.data.wsURL;
             this.connect();
         });
     },
