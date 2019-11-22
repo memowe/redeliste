@@ -2,6 +2,7 @@
 use Mojolicious::Lite -signatures;
 use Mojo::JSON qw(true false);
 
+use lib app->home->rel_file('lib')->to_string;
 use Redeliste::Model;
 
 # Load configuration from redeliste.conf
