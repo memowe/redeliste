@@ -28,6 +28,7 @@ sub sync ($c) {
         for ($message) {
             /^RQSP$/        && $session->add_request($person);
             /^NEXT$/        && $session->call_next_speaker;
+            /^NEXT (\d+)$/  && $session->call_next_speaker($1);
             /^CLOSELIST$/   && $session->list_open('');
             /^OPENLIST$/    && $session->list_open(1);
             /^NEXTITEM$/    && $session->next_item;
