@@ -90,6 +90,22 @@ sub startup ($self) {
             role        => 'user'
         )->redirect_to('attend');
     });
+
+    # A session has been joined, retrieve its data
+    my $s = $r->under(sub ($c) {
+
+        # Session found?
+        my $session = $c->model->sessions->{$c->session('token')};
+        return $c->reply->not_found unless defined $session;
+
+        # Si!
+        $c->stash(
+            session     => $session,
+            person_id   => $c->session('person_id'),
+            role        => $c->session('role'),
+        );
+        return 1;
+    });
 }
 
 1;
