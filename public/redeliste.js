@@ -52,6 +52,9 @@ new Vue({
         requestSpeak() {
             this.socket.send('RQSP');
         },
+        revoke() {
+            this.socket.send('REVK');
+        },
         callSpeaker() {
             this.socket.send('NEXT');
         },
