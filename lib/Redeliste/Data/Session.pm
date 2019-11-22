@@ -25,6 +25,12 @@ sub add_request ($self, $p) {
     return $self;
 }
 
+sub revoke ($self, $p) {
+    my $id = ref($p) eq 'Redeliste::Data::Person' ? $p->id : $p;
+    $self->requests($self->requests->grep(sub {$_ != $id}));
+    return $self;
+}
+
 sub get_request_persons ($self) {
     return $self->requests->map(sub {$self->persons->[shift]});
 }

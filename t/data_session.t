@@ -64,6 +64,14 @@ subtest Add => sub {
             is $session->requests->size => 1, 'Still one person';
             is $session->requests->[0] => $person->id, 'Old id';
         };
+
+        subtest Revoke => sub {
+            my $p = $session->add_person;
+            $session->add_request($p);
+            $session->revoke($person);
+            is $session->requests->size => 1, 'Still one person';
+            is $session->requests->[0] => $p->id, 'Right person';
+        };
     };
 };
 
