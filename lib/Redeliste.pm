@@ -42,15 +42,15 @@ sub init ($self) {
 
 sub startup ($self) {
 
-	# Load config and add helpers
-	$self->init;
+    # Load config and add helpers
+    $self->init;
 
-	# Prepare routes
-	my $r = $self->routes;
+    # Prepare routes
+    my $r = $self->routes;
 
-	# Static pages
-	$r->get('/')->name('choose');
-	$r->get("/$_") for qw(start join bye);
+    # Static pages
+    $r->get('/')->name('choose');
+    $r->get("/$_") for qw(start join bye);
 
     # Create a session and generate a token for session members
     $r->post('/start')->to('entrance#start_session');
