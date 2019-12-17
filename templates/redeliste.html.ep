@@ -74,7 +74,7 @@
                         <tr v-for="s in nextSpeakers" v-bind:class="{inactive: ! s.active}">
                             <td>{{ s.name }}</td>
                             <td>{{ s.star ? 'Ja' : 'Nein' }}</td>
-                            <td>{{ s.spoken }}</td>
+                            <td>{{ s.spoken_item }} / {{ s.spoken }}</td>
                             <td>
                                 <button v-if="role == 'chair' && s.id != nextSpeakerIds[0]" v-on:click="overrideSpeaker(s.id)">
                                     <i class="fas fa-check"></i>
@@ -96,7 +96,7 @@
                         <tr v-for="p in persons" v-bind:class="{inactive: ! p.active}">
                             <td>{{ p.name }}</td>
                             <td>{{ p.star ? 'Ja' : 'Nein' }}</td>
-                            <td>{{ p.spoken }}</td>
+                            <td>{{ p.spoken_item }} / {{ p.spoken }}</td>
                         </tr>
                     </tbody>
                 </table>
