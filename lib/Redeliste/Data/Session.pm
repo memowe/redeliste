@@ -48,6 +48,7 @@ sub call_next_speaker ($self, $=) {
 }
 
 sub next_item ($self) {
+    $self->persons->map('next_item');
     return $self->requests(c)->list_open(1);
 }
 

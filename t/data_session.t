@@ -93,6 +93,7 @@ subtest 'Next speakers' => sub {
     my $p3 = $session->add_person;
     is $session->persons->size => 3, 'Got two persons';
     is $_->spoken => 0, 'Never spoke' for $p1, $p2, $p3;
+    is $_->spoken_item => 0, 'Never spoke in this item' for $p1, $p2, $p3;
 
     subtest 'Get next IDs' => sub {
         $session->add_request($p2)->add_request($p3)->add_request($p1);
@@ -107,6 +108,7 @@ subtest 'Next speakers' => sub {
         is $session->requests->size => 2, 'One speaker called';
         ok $called != $session->persons->[$nn_id], 'Correct speaker removed';
         is $called->spoken => 1, 'Spoke';
+        is $called->spoken_item => 1, 'Spoke in this item';
     };
 
     subtest Override => sub {
@@ -117,16 +119,20 @@ subtest 'Next speakers' => sub {
         is $session->requests->size => 1, 'One speaker called';
         ok $called != $session->persons->[$nn_id], 'Correct speaker removed';
         is $called->spoken => 1, 'Spoke';
+        is $called->spoken_item => 1, 'Spoke in this item';
     };
 };
 
 subtest 'Next agenda item' => sub {
     my $session = Redeliste::Data::Session->new(token => 'PH00RT5');
     my $person  = $session->add_person;
+    $session->add_request($person->id)->call_next_speaker;
     $session->list_open('')->next_item;
 
     is $session->requests->size => 0, 'No requests';
     ok $session->list_open, 'List is open';
+    is $person->spoken => 1, 'Spoke once';
+    is $person->spoken_item => 0, 'But not in this item';
 };
 
 subtest 'Data export' => sub {
@@ -143,11 +149,12 @@ subtest 'Data export' => sub {
         token       => 'XNORFZT',
         name        => 'Foo session',
         persons     => [{
-            id      => 42,
-            name    => 'Anonymous',
-            active  => '',
-            spoken  => 0,
-            star    => '',
+            id          => 42,
+            name        => 'Anonymous',
+            active      => '',
+            spoken      => 0,
+            spoken_item => 0,
+            star        => '',
         }],
         requests    => [0],
         list_open   => '',
