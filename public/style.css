@@ -122,6 +122,11 @@ button.button-primary:hover {
     border-color: #7b8d9c;
 }
 
+#redeliste .persons-table .talking td {
+    background-color: #fff3c4;
+    color: #3a4752;
+}
+
 #redeliste .persons-table tr.inactive td {
     background-color: #c1d1de;
     color: #60707d;

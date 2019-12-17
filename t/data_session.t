@@ -94,6 +94,7 @@ subtest 'Next speakers' => sub {
     is $session->persons->size => 3, 'Got two persons';
     is $_->spoken => 0, 'Never spoke' for $p1, $p2, $p3;
     is $_->spoken_item => 0, 'Never spoke in this item' for $p1, $p2, $p3;
+    ok not($_->talking), 'Not speaking' for $p1, $p2, $p3;
 
     subtest 'Get next IDs' => sub {
         $session->add_request($p2)->add_request($p3)->add_request($p1);
@@ -109,6 +110,9 @@ subtest 'Next speakers' => sub {
         ok $called != $session->persons->[$nn_id], 'Correct speaker removed';
         is $called->spoken => 1, 'Spoke';
         is $called->spoken_item => 1, 'Spoke in this item';
+        ok $p2->talking, 'Second person talking';
+        ok not($p3->talking), 'Third person not talking';
+        ok not($p1->talking), 'First person not talking';
     };
 
     subtest Override => sub {
@@ -120,6 +124,9 @@ subtest 'Next speakers' => sub {
         ok $called != $session->persons->[$nn_id], 'Correct speaker removed';
         is $called->spoken => 1, 'Spoke';
         is $called->spoken_item => 1, 'Spoke in this item';
+        ok $p1->talking, 'First person talking';
+        ok not($p2->talking), 'Second person not talking';
+        ok not($p3->talking), 'Third person not talking';
     };
 };
 
@@ -155,6 +162,7 @@ subtest 'Data export' => sub {
             spoken      => 0,
             spoken_item => 0,
             star        => '',
+            talking     => '',
         }],
         requests    => [0],
         list_open   => '',
