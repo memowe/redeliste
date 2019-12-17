@@ -25,6 +25,7 @@ subtest 'Constructor' => sub {
             spoken      => 17,
             spoken_item => 34,
             star        => 1,
+            talking     => 1,
             tx          => \'Transaction',
         );
 
@@ -33,7 +34,8 @@ subtest 'Constructor' => sub {
         is $trish->active       => 1, 'Correct activity';
         is $trish->spoken       => 17, 'Correct speak count';
         is $trish->spoken_item  => 34, 'Correct item speak count';
-        is $trish->star         => 1, 'Correct star value';
+        ok $trish->star,            'Correct star value';
+        ok $trish->talking,         'Correct talking value';
         is ${$trish->tx}        => 'Transaction', 'Correct tx value';
     };
 };
@@ -67,6 +69,7 @@ subtest 'Data export' => sub {
         spoken      => 17,
         spoken_item => 666,
         star        => 1,
+        talking     => 1,
         tx          => \42,
     )->to_hash;
 
@@ -78,6 +81,7 @@ subtest 'Data export' => sub {
         spoken      => 17,
         spoken_item => 666,
         star        => 1,
+        talking     => 1,
     }, 'Correct hash values';
 };
 
