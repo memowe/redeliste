@@ -40,15 +40,24 @@ sub get_next_speaker_ids ($self) {
 }
 
 sub call_next_speaker ($self, $=) {
+
+    # Choose and call
     my $id   =  $_[1] // $self->get_next_speaker_ids->[0];
     my $reqs = $self->requests->grep(sub {$_ != $id});
     my $next = $self->persons->[$id]->spoke;
+
+    # Mark as the only talking person
+    $self->persons->each(sub ($p, $=) {
+        $p->talking($p->id eq $next->id);
+    });
+
+    # Done
     $self->requests($reqs);
     return $next;
 }
 
 sub next_item ($self) {
-    $self->persons->map('next_item');
+    $self->persons->map('next_item')->map('talking', '');
     return $self->requests(c)->list_open(1);
 }
 
