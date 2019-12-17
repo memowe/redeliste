@@ -93,7 +93,7 @@
                         <th>Geredet</th>
                     </tr></thead>
                     <tbody>
-                        <tr v-for="p in persons" v-bind:class="{inactive: ! p.active}">
+                        <tr v-for="p in persons" v-bind:class="{inactive: ! p.active, talking: p.talking}">
                             <td>{{ p.name }}</td>
                             <td>{{ p.star ? 'Ja' : 'Nein' }}</td>
                             <td>{{ p.spoken_item }} / {{ p.spoken }}</td>
