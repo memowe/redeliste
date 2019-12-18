@@ -68,4 +68,18 @@ subtest 'First-timer' => sub {
     is_deeply $sel->get_selection_ids => [3, 5, 1, 2, 4, 6], 'Correct selection';
 };
 
+subtest 'Gender-balanced' => sub {
+    my $sel = Redeliste::Selection->new;
+
+    # Mix f/d and m
+    $sel->add_person(p(id => 1, star => 1));
+    $sel->add_person(p(id => 2, star => 1));
+    $sel->add_person(p(id => 3, star => 0));
+    $sel->add_person(p(id => 4, star => 0));
+    $sel->add_person(p(id => 5, star => 1));
+
+    # Genders should be mixed (their order preserved)
+    is_deeply $sel->get_selection_ids => [1, 3, 2, 4, 5], 'Correct selection';
+};
+
 done_testing;
