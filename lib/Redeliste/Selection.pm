@@ -22,6 +22,18 @@ sub get_selection_ids ($self) {
     return $self->get_selection->map('id');
 }
 
+sub next ($self) {
+    my $next = shift @{$self->get_selection};
+    $self->_input($self->_input->grep(sub ($p) {$p ne $next}));
+    return $next;
+}
+
+sub next_id ($self) {
+    my $next = $self->next;
+    return unless defined $next;
+    return $next->id;
+}
+
 #----- Hidden selection methods ------
 
 sub _select ($self) {

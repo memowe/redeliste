@@ -19,7 +19,9 @@ subtest 'List handling' => sub {
 
     subtest 'Empty' => sub {
         is_deeply $sel->get_selection => [], 'Empty selection';
-        is_deeply $sel->get_selection_ids => [], 'Empty selection ids'
+        is_deeply $sel->get_selection_ids => [], 'Empty selection ids';
+        is $sel->next => undef, 'No next person';
+        is $sel->next_id => undef, 'No next person id';
     };
 
     subtest 'One person' => sub {
@@ -30,6 +32,11 @@ subtest 'List handling' => sub {
         is $cel->size => 1, 'Correct selection length';
         is_deeply $cel->first->to_hash => $p, 'Correct person';
         is_deeply $sel->get_selection_ids => [$p->id], 'Correct selection ids';
+
+        is $sel->next => $p, 'Correct next person';
+        is $sel->get_selection->size => 0, 'Selection is now empty';
+        is $sel->add_person($p)->next_id => 42, 'Correct next person id';
+        is $sel->get_selection->size => 0, 'Selection is empty again';
     };
 
     subtest 'Simple three person queue' => sub {
@@ -38,6 +45,11 @@ subtest 'List handling' => sub {
             'Correct selection';
         is_deeply $sel->get_selection_ids => [42, 17, 666],
             'Correct selection ids';
+
+        is $sel->next->id => 42, 'Correct next person';
+        is_deeply $sel->get_selection_ids => [17, 666], 'Correct remaining';
+        is $sel->next_id => 17, 'Correct next person id';
+        is_deeply $sel->get_selection_ids => [666], 'Correct remaining';
     };
 };
 
