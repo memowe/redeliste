@@ -13,8 +13,25 @@ sub add_person ($self, $person) {
 }
 
 sub _select ($self) {
-    $self->_selection($self->_input); # TODO
+    $self->_select_initial_queue;
+    $self->_select_first_timers_first;
     return $self;
+}
+
+sub _select_initial_queue ($self) {
+    $self->_selection($self->_input);
+}
+
+sub _select_first_timers_first ($self) {
+
+    # Split
+    my $all     = $self->_selection;
+    my $first   = $all->grep(sub ($p) {$p->spoken == 0});
+    my $others  = $all->grep(sub ($p) {$p->spoken != 0});
+
+    # Append others to first
+    push @$first, @$others;
+    $self->_selection($first);
 }
 
 sub get_selection ($self) {
