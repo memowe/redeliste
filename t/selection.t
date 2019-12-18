@@ -41,4 +41,19 @@ subtest 'List handling' => sub {
     };
 };
 
+subtest 'First-timer' => sub {
+    my $sel = Redeliste::Selection->new;
+
+    # Add mixed regular and first-time speakers
+    $sel->add_person(p(id => 1, spoken => 42));
+    $sel->add_person(p(id => 2, spoken => 17));
+    $sel->add_person(p(id => 3, spoken => 0));  # First-timer
+    $sel->add_person(p(id => 4, spoken => 666));
+    $sel->add_person(p(id => 5, spoken => 0));  # First-timer
+    $sel->add_person(p(id => 6, spoken => 37));
+
+    # First-timers should be first (their order preserved)
+    is_deeply $sel->get_selection_ids => [3, 5, 1, 2, 4, 6], 'Correct selection';
+};
+
 done_testing;
