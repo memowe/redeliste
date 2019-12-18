@@ -18,6 +18,8 @@ Eine Echtzeit-Multiuser-Redeliste.
 
     $ cpanm -n --installdeps .
 
+Make sure to add a `redeliste.conf` file (use `redeliste.conf.sample` as an example).
+
 ## Run
 
     $ hypnotoad redeliste
