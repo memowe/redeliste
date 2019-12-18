@@ -22,7 +22,7 @@ Make sure to add a `redeliste.conf` file (use `redeliste.conf.sample` as an exam
 
 ## Run
 
-    $ hypnotoad redeliste
+    $ hypnotoad script/redeliste
 
 ## Author and License
 
