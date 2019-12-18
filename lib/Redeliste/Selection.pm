@@ -6,11 +6,23 @@ use Mojo::Collection 'c';
 has _input      => sub { c }; # Collection of R::D::Persons
 has _selection  => sub { c }; # Collection of R::D::Persons
 
+#----- Public interface -----
+
 sub add_person ($self, $person) {
     push @{$self->_input}, $person;   # Add to the queue
     $self->_select;                   # Recalculate selection
     return $self;                     # Enable chaining
 }
+
+sub get_selection ($self) {
+    return $self->_selection;
+}
+
+sub get_selection_ids ($self) {
+    return $self->get_selection->map('id');
+}
+
+#----- Hidden selection methods ------
 
 sub _select ($self) {
     $self->_select_initial_queue;
@@ -32,14 +44,6 @@ sub _select_first_timers_first ($self) {
     # Append others to first
     push @$first, @$others;
     $self->_selection($first);
-}
-
-sub get_selection ($self) {
-    return $self->_selection;
-}
-
-sub get_selection_ids ($self) {
-    return $self->get_selection->map('id');
 }
 
 1;
