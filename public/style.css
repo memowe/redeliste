@@ -106,6 +106,10 @@ button.button-primary:hover {
     font-weight: bold;
 }
 
+#redeliste .list-table tbody .override-button {
+    margin: 0 !important;
+}
+
 #redeliste .list-table tr.inactive td {
     background-color: #ebeef0 !important;
     color: #60707d;

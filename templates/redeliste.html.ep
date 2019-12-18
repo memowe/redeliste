@@ -76,7 +76,7 @@
                             <td>{{ s.star ? 'Ja' : 'Nein' }}</td>
                             <td>{{ s.spoken_item }} / {{ s.spoken }}</td>
                             <td>
-                                <button v-if="role == 'chair' && s.id != nextSpeakerIds[0]" v-on:click="overrideSpeaker(s.id)">
+                                <button v-if="role == 'chair' && s.id != nextSpeakerIds[0]" v-on:click="overrideSpeaker(s.id)" class="override-button">
                                     <i class="fas fa-check"></i>
                                 </button>
                             </td>
