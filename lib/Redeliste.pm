@@ -9,6 +9,7 @@ sub init ($self) {
     # Load configuration from redeliste.conf
     $self->plugin('Config');
     $self->secrets([$self->config('secret')]);
+    $self->mode($self->config('production') ? 'production' : 'development');
 
     # In-memory "database"
     $self->helper(model => sub { state $model = Redeliste::Model->new });

@@ -1,4 +1,7 @@
 {
+    # Production loads vue.min and hides debugging information
+    production => 0,
+
     # Session cookie passphrase
     secret => 'Nichts ist gelber als gelb selber',
 

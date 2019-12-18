@@ -131,6 +131,5 @@
     </section>
 </main>
 
-%= javascript 'https://cdn.jsdelivr.net/npm/vue/dist/vue.js'
-%= javascript 'https://cdn.jsdelivr.net/npm/axios/dist/axios.js'
+%= include 'load_vue'
 %= javascript '/redeliste.js'

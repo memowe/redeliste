@@ -37,5 +37,5 @@
     % end
 </section>
 
-%= javascript 'https://cdn.jsdelivr.net/npm/vue/dist/vue.js'
+%= include 'load_vue'
 %= javascript '/join.js'
