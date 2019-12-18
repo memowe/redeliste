@@ -40,7 +40,7 @@ subtest 'List handling' => sub {
     };
 
     subtest 'Simple three person queue' => sub {
-        $sel->add_person($_) for p(id => 17), p(id => 666);
+        $sel->add_person(p(id => $_)) for (42, 17, 666);
         is_deeply $sel->get_selection->map('id') => [42, 17, 666],
             'Correct selection';
         is_deeply $sel->get_selection_ids => [42, 17, 666],
