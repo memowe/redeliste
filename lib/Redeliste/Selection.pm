@@ -34,28 +34,26 @@ sub next_id ($self) {
     return $next->id;
 }
 
-#----- Hidden selection methods ------
+#----- Hidden selection methods and functions ------
 
 sub _select ($self) {
-    $self->_select_initial_queue;
-    $self->_select_first_timers_first;
-    return $self;
+    my $queue = $self->_input;
+
+    # Transformations
+    $queue = $self->_first_timers_first($queue);
+
+    # Done
+    $self->_selection($queue);
 }
 
-sub _select_initial_queue ($self) {
-    $self->_selection($self->_input);
-}
-
-sub _select_first_timers_first ($self) {
+sub _first_timers_first ($self, $queue) {
 
     # Split
-    my $all     = $self->_selection;
-    my $first   = $all->grep(sub ($p) {$p->spoken == 0});
-    my $others  = $all->grep(sub ($p) {$p->spoken != 0});
+    my $first   = $queue->grep(sub ($p) {$p->spoken == 0});
+    my $others  = $queue->grep(sub ($p) {$p->spoken != 0});
 
-    # Append others to first
-    push @$first, @$others;
-    $self->_selection($first);
+    # Combine
+    return c(@$first, @$others);
 }
 
 1;
