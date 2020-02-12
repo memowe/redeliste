@@ -34,8 +34,6 @@ sub next_id ($self) {
     return $next->id;
 }
 
-#----- Hidden selection methods and functions ------
-
 sub _select ($self) {
     my $queue = $self->_input;
 
@@ -46,6 +44,8 @@ sub _select ($self) {
     $self->_selection($queue);
 }
 
+# TODO nah - das geht nicht hintereinander
+
 sub _first_timers_first ($self, $queue) {
 
     # Split
@@ -54,6 +54,15 @@ sub _first_timers_first ($self, $queue) {
 
     # Combine
     return c(@$first, @$others);
+}
+
+sub _select_gender_balanced ($self) {
+    return unless $self->_selection->size == 0;
+
+    # Split in two lists ($these gender of first person)
+    my $star    = $self->_selection->first->star;
+    my $these   = $self->_selection->grep(sub ($p) {$p->star == $star});
+    my $others  = $self->_selection->grep(sub ($p) {$p->star != $star});
 }
 
 1;
