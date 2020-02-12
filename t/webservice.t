@@ -42,4 +42,35 @@ subtest 'Create session' => sub {
     };
 };
 
+subtest 'Join session' => sub {
+
+    subtest 'Unknown session token' => sub {
+        my $token = 'XNORFZT42';
+        ok not(exists $t->app->model->sessions->{$token}),
+            'Session token is really unknown';
+        $t->post_ok("/session/$token/person")->status_is(404);
+    };
+
+    subtest 'Session exists' => sub {
+        my $session = $t->app->model->add_session(name => 'Bar session');
+        my $token   = $session->token;
+
+        subtest Interaction => sub {
+            $t->post_ok("/session/$token/person", form => {
+                name => 'Baz name',
+                sex  => 'male',
+            })
+                ->status_is(201)
+                ->json_like('/personId' => qr/^\d+$/);
+        };
+
+        subtest 'Model state modification' => sub {
+            my $person_id   = $t->tx->res->json('/personId');
+            my $person      = $session->persons->[$person_id];
+            is $person->name => 'Baz name', 'Correct person name';
+            ok not($person->star), 'Person is not a star';
+        };
+    };
+};
+
 done_testing;

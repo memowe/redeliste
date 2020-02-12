@@ -30,4 +30,22 @@ post '/session' => sub ($c) {
     });
 };
 
+post '/session/:token/person' => sub ($c) {
+
+    # Lookup session
+    my $session = $c->model->sessions->{$c->param('token')};
+    return $c->reply->not_found unless $session;
+
+    # Inject data
+    my $person = $session->add_person(
+        name => $c->param('name') // ('Anonymous' . int(rand 10_000)),
+        star => $c->param('sex') ne 'male',
+    );
+
+    # Respond with 201 (person created)
+    $c->render(status => 201, json => {
+        personId => $person->id,
+    });
+};
+
 app->start;
