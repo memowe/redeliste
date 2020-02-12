@@ -2,6 +2,7 @@
 
 use Test::More;
 use Test::Mojo;
+use Mojo::JSON qw(true false);
 
 # Prepare webservice lite app for testing
 use FindBin;
@@ -72,6 +73,22 @@ subtest 'Join session' => sub {
             ok not($person->star), 'Person is not a star';
         };
     };
+};
+
+subtest 'Session data' => sub {
+
+    # Prepare a non-trivial session
+    my $session = $t->app->model->add_session(name => 'Baz session');
+    my $p1      = $session->add_person(name => 'Quux star', sex => 'star');
+    my $p2      = $session->add_person(name => 'Quuux man', sex => 'male');
+    $session->add_request($p2);
+
+    # Test data dump
+    $t->get_ok('/session/' . $session->token)
+        ->status_is(200)
+        ->json_is('/session'        => $session->to_hash)
+        ->json_is('/nextSpeakers'   => $session->get_next_speaker_ids)
+        ->json_is('/listOpen'       => true);
 };
 
 done_testing;

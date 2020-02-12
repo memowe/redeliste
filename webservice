@@ -1,5 +1,6 @@
 #!/usr/bin/env perl
 use Mojolicious::Lite -signatures;
+use Mojo::JSON qw(true false);
 
 use lib app->home->rel_file('lib')->to_string;
 use Redeliste::Model;
@@ -14,7 +15,15 @@ app->mode(app->config('production') ? 'production' : 'development');
 # In-memory "database"
 helper model => sub { state $model = Redeliste::Model->new };
 
-### Actions
+# All relevant data for a given session as a hash
+helper session_data_dump => sub ($c, $session) {{
+    session         => $session->to_hash,
+    nextSpeakers    => $session->get_next_speaker_ids,
+    listOpen        => $session->list_open ? true : false,
+    wsURL           => $c->url_for('sync')->to_abs->to_string,
+}};
+
+### REST API routes
 
 post '/session' => sub ($c) {
 
@@ -48,6 +57,16 @@ post '/session/:token/person' => sub ($c) {
     $c->render(status => 201, json => {
         personId => $person->id,
     });
+};
+
+get '/session/:token' => sub ($c) {
+
+    # Lookup session
+    my $session = $c->model->sessions->{$c->param('token')};
+    return $c->reply->not_found unless $session;
+
+    # Respond with JSON data structure
+    $c->render(json => $c->session_data_dump($session));
 };
 
 app->start;
