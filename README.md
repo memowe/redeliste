@@ -26,7 +26,7 @@ Make sure to add a `redeliste.conf` file (use `redeliste.conf.sample` as an exam
 
 ## Author and License
 
-Copyright (c) 2019 [Mirko Westermeier][mirko] ([\@memowe][mgh], [mirko@westermeier.de][mmail])
+Copyright (c) [Mirko Westermeier][mirko] ([\@memowe][mgh], [mirko@westermeier.de][mmail])
 
 Released under the MIT (X11) license. See [LICENSE][mit] for details.
 

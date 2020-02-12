@@ -14,7 +14,7 @@
         %= content
 
         <footer>
-            &copy; 2019-2020 <a href="https://mirko.westermeier.de/">Mirko Westermeier</a>.
+            &copy; <a href="https://mirko.westermeier.de/">Mirko Westermeier</a>.
             <br>
             <a href="https://github.com/memowe/redeliste">Repository &amp; License</a>
         </footer>
