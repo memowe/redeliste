@@ -6,8 +6,13 @@ use Redeliste::Data::Session;
 has sessions => sub { {} };
 
 sub add_session ($self, @args) {
-    my $token   = $self->_generate_token;
-    my $session = Redeliste::Data::Session->new(token => $token, @args);
+    my $token       = $self->_generate_token;
+    my $admin_token = $self->_generate_token;
+    my $session     = Redeliste::Data::Session->new(
+        token       => $token,
+        admin_token => $admin_token,
+        @args
+    );
     $self->sessions->{$token} = $session;
     return $session;
 }

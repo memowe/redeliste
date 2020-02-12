@@ -6,6 +6,7 @@ use Mojo::Collection 'c';
 use Scalar::Util 'blessed';
 
 has token       => sub { die "Token attribute required!\n" };
+has admin_token => sub { die "Admin token attribute required!\n" };
 has name        => 'Anonymous session';
 has persons     => sub { c };
 has requests    => sub { c };
@@ -65,7 +66,7 @@ sub to_hash ($self) {
 
     # Prepare hash
     my %hash = map {$_ => $self->$_}
-        qw(token name persons requests list_open);
+        qw(token admin_token name persons requests list_open);
 
     # Handle collections
     for my $attr (keys %hash) {
