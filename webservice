@@ -4,8 +4,10 @@ use Mojolicious::Lite -signatures;
 use lib app->home->rel_file('lib')->to_string;
 use Redeliste::Model;
 
-# Load configuration from redeliste.conf
-plugin Config => {file => app->home->rel_file('redeliste.conf')};
+# Load configuration
+plugin Config => {
+    file => $ENV{REDELISTE_CONFIG} // app->home->rel_file('redeliste.conf'),
+};
 app->secrets([app->config('secret')]);
 app->mode(app->config('production') ? 'production' : 'development');
 

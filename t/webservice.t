@@ -5,6 +5,7 @@ use Test::Mojo;
 
 # Prepare webservice lite app for testing
 use FindBin;
+$ENV{REDELISTE_CONFIG} = "$FindBin::Bin/../redeliste.conf.sample";
 require "$FindBin::Bin/../webservice";
 my $t = Test::Mojo->new;
 $t->app->log->level('warn');
