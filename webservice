@@ -1,0 +1,33 @@
+#!/usr/bin/env perl
+use Mojolicious::Lite -signatures;
+
+use lib app->home->rel_file('lib')->to_string;
+use Redeliste::Model;
+
+# Load configuration from redeliste.conf
+plugin Config => {file => app->home->rel_file('redeliste.conf')};
+app->secrets([app->config('secret')]);
+app->mode(app->config('production') ? 'production' : 'development');
+
+# In-memory "database"
+helper model => sub { state $model = Redeliste::Model->new };
+
+### Actions
+
+post '/session' => sub ($c) {
+
+    # Init
+    my $session = $c->model->add_session(name => $c->param('name'));
+    my $chair   = $session->add_person(
+        name => $c->param('pname') // ('Anonymous' . int(rand 10_000)),
+        star => $c->param('sex') ne 'male',
+    );
+
+    # Respond with 201 (created)
+    $c->render(status => 201, json => {
+        token       => $session->token,
+        adminToken  => $session->admin_token,
+    });
+};
+
+app->start;
