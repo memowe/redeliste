@@ -23,6 +23,15 @@ helper session_data_dump => sub ($c, $session) {{
     wsURL           => $c->url_for('sync')->to_abs->to_string,
 }};
 
+# Websocket communication helpers
+helper broadcast => sub ($c, $session) {
+    $session->persons->map('tx')->grep(sub {defined})
+        ->each(sub {$_->send({json => $c->session_data_dump($session)})});
+};
+helper broadclose => sub ($c, $session) {
+    $session->persons->map('tx')->grep(sub {defined})->each('finish');
+};
+
 ### REST API routes
 
 post '/session' => sub ($c) {
@@ -68,5 +77,77 @@ get '/session/:token' => sub ($c) {
     # Respond with JSON data structure
     $c->render(json => $c->session_data_dump($session));
 };
+
+### WebSocket synchronisation
+
+websocket '/session/:token/sync' => sub ($c) {
+
+    # Keep connection alive
+    $c->inactivity_timeout($c->config('timeout'));
+
+    # Lookup corresponding data
+    my $session = $c->model->sessions->{$c->param('token')};
+    return $c->reply_not_found unless $session;
+    my $person = $session->persons->[$c->param('personId')];
+    return $c->reply_not_found unless $person;
+
+    # Check if chair
+    my $is_chair = defined $c->param('adminToken')
+        && $session->admin_token eq $c->param('adminToken');
+
+    # Store connection
+    $person->tx($c->tx)->active(1);
+
+    # React on a message
+    $c->on(message => sub ($c, $message) {
+
+        # Close the whole session
+        if ($message eq 'CLOSESESSION') {
+            delete $c->model->sessions->{$session->{token}};
+            $c->broadclose($session);
+            return;
+        }
+
+        # Dispatch messages
+        for ($message) {
+
+            # Person messages
+            /^RQSP$/ && $session->add_request($person);
+            /^REVK$/ && $session->revoke($person);
+
+            # Chair messages
+            if ($is_chair) {
+                /^NEXT$/        && $session->call_next_speaker;
+                /^NEXT (\d+)$/  && $session->call_next_speaker($1);
+                /^CLOSELIST$/   && $session->list_open('');
+                /^OPENLIST$/    && $session->list_open(1);
+                /^NEXTITEM$/    && $session->next_item;
+            }
+
+            # Update all persons
+            $c->broadcast($session);
+        }
+    });
+
+    # React on a client leaving
+    $c->on(finish => sub {
+
+        # Chair: close everything
+        if ($is_chair) {
+            delete $c->model->sessions->{$session->token};
+            $c->broadclose($session);
+        }
+
+        # Normal person: just let them know
+        else {
+            $person->tx(undef)->active(0);
+            $c->broadcast($session);
+        }
+    });
+
+    # Send updated session data to all clients
+    $c->broadcast($session);
+
+} => 'sync';
 
 app->start;
