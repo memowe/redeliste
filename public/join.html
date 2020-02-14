@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="de">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://cdn.jsdelivr.net/npm/normalize.css/normalize.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/gh/skeleton-framework/skeleton-framework/dist/skeleton.css" rel="stylesheet">
+        <link href="/style.css" rel="stylesheet">
+        <script src="https://kit.fontawesome.com/02991c9553.js"></script>
+        <title>Sitzung betreten</title>
+    </head>
+    <body>
+
+        <section id="title">
+            <div class="row">
+                <div class="twelve columns">
+                    <h2>Redeliste: <strong>Sitzung betreten</strong>
+                </div>
+            </div>
+        </section>
+
+        <section id="form">
+            <form v-on:submit="submit" action="#" method="post">
+            <div class="row">
+                <div class="two columns"></div>
+                <div class="four columns">
+                    <label for="token">Code:</label>
+                    <input class="u-full-width" id="token" name="token" type="text" v-bind:value="token" v-on:input="token = $event.target.value.toUpperCase()" value="">
+                </div>
+                <div class="four columns">
+                    <label for="name">Dein Name:</label>
+                    <input class="u-full-width" id="name" name="name" type="text" v-model="name" value="">
+                </div>
+                <div class="two columns"></div>
+            </div>
+            <div class="row">
+                <div class="two columns"></div>
+                <div class="four columns">
+                    <label for="sex">Geschlecht:</label>
+                    <select id="sex" name="sex" v-model="sex">
+						<option value="male">Männlich</option>
+						<option value="female">Weiblich</option>
+                        <option value="star">Sternchen</option>
+                    </select>
+                </div>
+                <div class="four columns join-button">
+                    <br>
+                    <button type="submit" class="button-primary" v-bind:disabled="empty">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Betreten
+                    </button>
+                </div>
+                <div class="two columns"></div>
+            </div>
+        </form></section>
+
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.js"></script>
+        <script src="/join.js"></script>
+
+        <footer>
+            &copy; <a href="https://mirko.westermeier.de/">Mirko Westermeier</a>.
+            <br>
+            <a href="https://github.com/memowe/redeliste">Repository &amp; License</a>
+        </footer>
+    </body>
+</html>
