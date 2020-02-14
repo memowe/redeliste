@@ -32,10 +32,10 @@ new Vue({
                 this.wsConnected = true;
             };
             this.socket.onmessage = msg => {
-                let data = JSON.parse(msg.data);
-                this.session = data.session;
+                let data            = JSON.parse(msg.data);
+                this.session        = data.session;
                 this.nextSpeakerIds = data.nextSpeakers;
-                this.listOpen = data.listOpen;
+                this.listOpen       = data.listOpen;
             };
             this.socket.onclose = () => {
                 window.location.replace('/bye');
