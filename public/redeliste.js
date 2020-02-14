@@ -78,14 +78,29 @@ new Vue({
             }
         },
     },
-    beforeMount() {
-        this.role = this.$el.attributes['data-role'].value;
-    },
     mounted() {
-        axios.get('/data.json').then(res => {
-            this.session    = res.data.session;
-            this.personId   = res.data.personId;
-            this.wsURL      = res.data.wsURL;
+
+        // Collect data: local
+        let isAdmin     = JSON.parse(sessionStorage.getItem('isAdmin'));
+        this.personId   = parseInt(sessionStorage.getItem('personId'));
+        this.role       = isAdmin ? 'chair' : 'user';
+
+        // Collect data: remote
+        axios.get('/session/' + sessionStorage.getItem('token')).then(res => {
+            this.session = res.data.session;
+
+            // Construct websocket URL
+            this.wsURL = res.data.wsURL
+                + '?personId=' + encodeURIComponent(this.personId);
+            if (isAdmin) {
+                this.wsURL += '&adminToken='
+                + encodeURIComponent(sessionStorage.getItem('adminToken'))
+            }
+
+            // Show session token at the top
+            document.getElementById('token').textContent = this.session.token;
+
+            // Start websocket synchronisation
             this.connect();
         });
     },
