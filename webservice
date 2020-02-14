@@ -32,6 +32,12 @@ helper broadclose => sub ($c, $session) {
     $session->persons->map('tx')->grep(sub {defined})->each('finish');
 };
 
+### Render frontend from root route
+
+get '/' => sub ($c) {
+    $c->reply->static('index.html');
+} => 'choose';
+
 ### REST API routes
 
 post '/session' => sub ($c) {
