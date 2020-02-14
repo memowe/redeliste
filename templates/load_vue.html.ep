@@ -1,3 +1,0 @@
-% my $ext = app->mode eq 'production' ? '.min.js' : '.js';
-%= javascript "https://cdn.jsdelivr.net/npm/vue/dist/vue$ext"
-%= javascript "https://cdn.jsdelivr.net/npm/axios/dist/axios$ext"
