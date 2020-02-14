@@ -157,4 +157,10 @@ websocket '/session/:token/sync' => sub ($c) {
 
 } => 'sync';
 
+### Static not found page
+
+any '/*whatever' => sub ($c) {
+    $c->reply->static('404.html'); # TODO set 404 status code
+};
+
 app->start;
