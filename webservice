@@ -157,10 +157,10 @@ websocket '/session/:token/sync' => sub ($c) {
 
 } => 'sync';
 
-### Static not found page
-
-any '/*whatever' => sub ($c) {
-    $c->reply->static('404.html'); # TODO set 404 status code
-};
-
 app->start;
+
+__DATA__
+
+@@ not_found.html.ep
+% use Mojo::Util 'decode';
+%== decode 'UTF-8' => app->static->file('404.html')->slurp
