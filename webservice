@@ -47,6 +47,7 @@ post '/session' => sub ($c) {
     $c->render(status => 201, json => {
         token       => $session->token,
         adminToken  => $session->admin_token,
+        personId    => $chair->id,
     });
 };
 

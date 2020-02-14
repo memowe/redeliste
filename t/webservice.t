@@ -27,6 +27,7 @@ subtest 'Create session' => sub {
     subtest 'Model state modification' => sub {
         my $token       = $t->tx->res->json('/token');
         my $admin_token = $t->tx->res->json('/adminToken');
+        my $chair_id    = $t->tx->res->json('/personId');
         my $session     = $t->app->model->sessions->{$token};
 
         subtest Session => sub {
@@ -36,7 +37,7 @@ subtest 'Create session' => sub {
         };
 
         subtest Chair => sub {
-            my $chair = $session->persons->first;
+            my $chair = $session->persons->[$chair_id];
             ok $chair, 'Chair found';
             is $chair->name => 'Bar woman', 'Correct chair name';
             ok $chair->star, 'Chair is a star';
