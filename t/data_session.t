@@ -14,6 +14,8 @@ use_ok 'Redeliste::Data::Session';
 subtest 'Required attributes' => sub {
     throws_ok { Redeliste::Data::Session->new->token }
         qr/^Token attribute required!/, 'Required token exception';
+    throws_ok { Redeliste::Data::Session->new->admin_token }
+        qr/^Admin token attribute required!/, 'Required admin_token exception';
 };
 
 subtest 'Constructor' => sub {
@@ -27,6 +29,7 @@ subtest 'Constructor' => sub {
     subtest 'Complete data' => sub {
         my $sess = Redeliste::Data::Session->new(
             token       => 'XNORZT',
+            admin_token => 'XNIRSCHT',
             name        => 'Foo session',
             persons     => [42],
             requests    => [0],
@@ -34,6 +37,7 @@ subtest 'Constructor' => sub {
         );
 
         is $sess->token => 'XNORZT', 'Correct token';
+        is $sess->admin_token => 'XNIRSCHT', 'Correct admin token';
         is $sess->name  => 'Foo session', 'Correct name';
         is_deeply $sess->persons  => [42], 'Correct persons';
         is_deeply $sess->requests => [0], 'Correct requests';
@@ -42,7 +46,10 @@ subtest 'Constructor' => sub {
 };
 
 subtest Add => sub {
-    my $session = Redeliste::Data::Session->new(token => 'FOOBAR');
+    my $session = Redeliste::Data::Session->new(
+        token       => 'FOOBAR',
+        admin_token => 'XNORFZT',
+    );
 
     subtest Person => sub {
         is $session->persons->size => 0, 'No persons yet';
@@ -76,7 +83,10 @@ subtest Add => sub {
 };
 
 subtest 'Get request persons' => sub {
-    my $session = Redeliste::Data::Session->new(token => 'QUUX');
+    my $session = Redeliste::Data::Session->new(
+        token       => 'QUUX',
+        admin_token => 'QUIRKS',
+    );
     my $person1 = $session->add_person;
     my $person2 = $session->add_person;
     is $session->persons->size => 2, 'Got two persons';
@@ -87,7 +97,10 @@ subtest 'Get request persons' => sub {
 };
 
 subtest 'Next speakers' => sub {
-    my $session = Redeliste::Data::Session->new(token => 'QUUX');
+    my $session = Redeliste::Data::Session->new(
+        token       => 'QUUX',
+        admin_token => 'QUIRKS',
+    );
     my $p1 = $session->add_person;
     my $p2 = $session->add_person;
     my $p3 = $session->add_person;
@@ -131,7 +144,10 @@ subtest 'Next speakers' => sub {
 };
 
 subtest 'Next agenda item' => sub {
-    my $session = Redeliste::Data::Session->new(token => 'PH00RT5');
+    my $session = Redeliste::Data::Session->new(
+        token       => 'PH00RT5',
+        admin_token => 'XNORFZT',
+    );
     my $person  = $session->add_person;
     $session->add_request($person->id)->call_next_speaker;
     $session->list_open('')->next_item;
@@ -145,6 +161,7 @@ subtest 'Next agenda item' => sub {
 subtest 'Data export' => sub {
     my $data = Redeliste::Data::Session->new(
         token       => 'XNORFZT',
+        admin_token => 'XNIRSCHT',
         name        => 'Foo session',
         persons     => c(Redeliste::Data::Person->new(id => 42)),
         requests    => [0],
@@ -154,6 +171,7 @@ subtest 'Data export' => sub {
     is ref($data) => 'HASH', 'Correct hash reference';
     is_deeply $data => {
         token       => 'XNORFZT',
+        admin_token => 'XNIRSCHT',
         name        => 'Foo session',
         persons     => [{
             id          => 42,
