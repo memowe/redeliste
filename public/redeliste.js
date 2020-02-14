@@ -38,7 +38,7 @@ new Vue({
                 this.listOpen       = data.listOpen;
             };
             this.socket.onclose = () => {
-                window.location.replace('/bye');
+                window.location.replace('/bye.html');
             };
         },
         disconnect(confirmText) {
@@ -46,7 +46,7 @@ new Vue({
                 this.socket.close();
                 this.wsConnected = false;
                 this.session     = null;
-                window.location.replace('/bye');
+                window.location.replace('/bye.html');
             }
         },
         requestSpeak() {
