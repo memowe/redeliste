@@ -20,6 +20,7 @@ subtest 'Create session' => sub {
             sex     => 'female',
         })
             ->status_is(201)
+            ->header_is('Access-Control-Allow-Origin' => '*')
             ->json_like('/token'      => qr/^.{5}$/, 'Token looks good')
             ->json_like('/adminToken' => qr/^.{20}$/, 'Admin token looks good');
     };
@@ -64,6 +65,7 @@ subtest 'Join session' => sub {
                 sex  => 'male',
             })
                 ->status_is(201)
+                ->header_is('Access-Control-Allow-Origin' => '*')
                 ->json_like('/personId' => qr/^\d+$/);
         };
 
@@ -87,6 +89,7 @@ subtest 'Session data' => sub {
     # Test data dump
     $t->get_ok('/session/' . $session->token)
         ->status_is(200)
+        ->header_is('Access-Control-Allow-Origin' => '*')
         ->json_is('/session'        => $session->to_hash)
         ->json_is('/nextSpeakers'   => $session->get_next_speaker_ids)
         ->json_is('/listOpen'       => true);

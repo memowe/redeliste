@@ -32,6 +32,11 @@ helper broadclose => sub ($c, $session) {
     $session->persons->map('tx')->grep(sub {defined})->each('finish');
 };
 
+# Hook to add CORS header to each response
+hook after_dispatch => sub ($c) {
+    $c->res->headers->access_control_allow_origin('*');
+};
+
 ### Render frontend from root route
 
 get '/' => sub ($c) {
