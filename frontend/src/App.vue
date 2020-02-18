@@ -1,8 +1,7 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+    <div id="app">
+        <HelloWorld v-bind:answer="answer" />
+    </div>
 </template>
 
 <script>
@@ -10,20 +9,23 @@ import HelloWorld from './components/HelloWorld.vue'
 import axios from 'axios'
 
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
+    name: 'App',
+    data: function() { return {
+        answer: 'loading...'
+    } },
+    components: {
+        HelloWorld
+    },
+    mounted () {
+        axios.get('http://localhost:3000/answer').then(res => {
+            this.answer = res.data.answer.toString();
+        });
+    }
 }
 </script>
 
 <style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+    color: maroon;
 }
 </style>
