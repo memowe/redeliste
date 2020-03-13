@@ -1,31 +1,16 @@
 <template>
     <div id="app">
-        <HelloWorld v-bind:answer="answer" />
+        <Choose/>
     </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-import axios from 'axios'
+import Choose from './components/Choose.vue'
 
 export default {
     name: 'App',
-    data: function() { return {
-        answer: 'loading...'
-    } },
     components: {
-        HelloWorld
-    },
-    mounted () {
-        axios.get('http://localhost:3000/answer').then(res => {
-            this.answer = res.data.answer.toString();
-        });
+        Choose
     }
 }
 </script>
-
-<style>
-#app {
-    color: maroon;
-}
-</style>
