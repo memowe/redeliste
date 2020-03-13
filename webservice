@@ -162,6 +162,10 @@ websocket '/session/:token/sync' => sub ($c) {
 
 } => 'sync';
 
+### TODO weg
+get '/answer' => {json => {answer => 42}};
+###
+
 app->start;
 
 __DATA__
